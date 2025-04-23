@@ -1,0 +1,15 @@
+# Build
+dist
+bundled
+.tsbuildinfo
+
+# Dependencies
+node_modules
+
+# Editors
+.vscode
+*.code-workspace
+
+# OS metadata
+.DS_Store
+Thumbs.db

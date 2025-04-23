@@ -1,0 +1,53 @@
+{
+  "name": "@multisynq/client",
+  "version": "1.0.0",
+  "description": "Real-time multiplayer framework for web applications",
+  "author": "Croquet Labs",
+  "exports": {
+    ".": {
+      "node": {
+        "import": "./dist/multisynq-client-node.mjs",
+        "require": "./dist/multisynq-client-node.cjs"
+      },
+      "default": {
+        "import": "./dist/multisynq-client.mjs",
+        "require": "./dist/multisynq-client.cjs"
+      }
+    }
+  },
+  "types": "dist/multisynq-client.d.ts",
+  "files": [
+    "dist",
+    "bundled"
+  ],
+  "jsdelivr": "bundled/multisynq-client.min.js",
+  "unpkg": "bundled/multisynq-client.min.js",
+  "license": "Apache-2.0",
+  "keywords": [
+    "multisynq",
+    "multiplayer",
+    "multiuser",
+    "collaboration",
+    "realtime"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/multisynq/multisynq-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/multisynq/multisynq-client/issues"
+  },
+  "homepage": "https://github.com/multisynq/multisynq-client#readme",
+  "scripts": {
+    "build": "node esbuild.mjs",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "@croquet/croquet": "^2.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "esbuild": "^0.25.2",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "hello_node",
+  "version": "1.0.0",
+  "description": "Node example",
+  "main": "hello_node.js",
+  "type": "module",
+  "scripts": {
+    "start": "node hello_node.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Croquet Labs",
+  "license": "ISC",
+  "dependencies": {
+    "@multisynq/client": "file:../.."
+  }
+}

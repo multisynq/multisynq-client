@@ -1,0 +1,1 @@
+../../bundled/multisynq-client.esm.js
