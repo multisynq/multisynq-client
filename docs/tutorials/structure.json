@@ -1,0 +1,50 @@
+{
+    "1_1_hello_world": {
+        "title": "💻 Hello World"
+    },
+    "1_2_simple_animation": {
+        "title": "💻 Simple Animation"
+    },
+    "1_3_multiuser_chat": {
+        "title": "💻 Multiuser Chat"
+    },
+    "1_4_view_smoothing": {
+        "title": "💻 View Smoothing"
+    },
+    "1_5_3d_animation": {
+        "title": "💻 3D Animation"
+    },
+    "1_6_multiblaster": {
+        "title": "🕹️ Multiblaster"
+    },
+    "2_1_model_view_reflector": {
+        "title": "💡 Model-View-Reflector"
+    },
+    "2_2_writing_a_multisynq_app": {
+        "title": "💡 Writing a Multisynq Application"
+    },
+    "2_3_writing_a_multisynq_view": {
+        "title": "💡 Writing a Multisynq View"
+    },
+    "2_4_writing_a_multisynq_model": {
+        "title": "💡 Writing a Multisynq Model"
+    },
+    "2_5_sim_time_and_future": {
+        "title": "💡 Simulation Time and Future Sends"
+    },
+    "2_6_events_pub_sub": {
+        "title": "💡 Events & Publish/Subscribe"
+    },
+    "2_7_snapshots": {
+        "title": "💡 Snapshots"
+    },
+    "2_8_random": {
+        "title": "💡 Randomness & Determinism"
+    },
+    "2_9_data": {
+        "title": "💡 Data API"
+    },
+    "2_A_persistence": {
+        "title": "💡 Persistence API"
+    }
+}

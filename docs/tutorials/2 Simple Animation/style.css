@@ -1,0 +1,35 @@
+#qr {  position: fixed; width: 150px; height: 150px; top: 10px; right: 30px; }
+#session { position: fixed; width: 80px; height: 80px; top: 160px; right: 30px; }
+
+body {
+  display: flex;
+  flex-flow: wrap;
+  user-select: none;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  font: 12px sans-serif;
+  background: #999;
+}
+.root {
+  position: absolute;
+  width: 1100px;
+  height: 1100px;
+  background: #333;
+  overflow: hidden;
+  z-index: -1;
+}
+.circle {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+}
+.roundRect {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 25px;
+}

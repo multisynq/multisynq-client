@@ -1,0 +1,11 @@
+#qr {  position: fixed; width: 150px; height: 150px; top: 10px; right: 30px; }
+#session { position: fixed; width: 80px; height: 80px; top: 150px; right: 40px; }
+
+html, body, #chat { height: 100%; margin: 0; }
+body,input { font: 24px sans-serif; }
+#chat { display: flex; flex-flow: row wrap; }
+#chat > * { margin: 5px 10px; padding: 10px; border: 1px solid #999; }
+#textIn,#sendButton { flex: 1 0 0; }
+#textOut { height: calc(100% - 100px); flex: 1 100%;  overflow: auto }
+#textIn { flex-grow: 100 }
+#sendButton { background-color: #fff; border: 2px solid #000 }

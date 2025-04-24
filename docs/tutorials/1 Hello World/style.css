@@ -1,0 +1,11 @@
+#qr {  position: fixed; width: 150px; height: 150px; top: 10px; right: 30px; }
+#session { position: fixed; width: 80px; height: 80px; top: 150px; right: 40px; }
+body {
+  display: flex;
+  flex-flow: wrap;
+  user-select: none;
+}
+#countDisplay {
+  margin: auto;
+  font: 64px sans-serif;
+}
