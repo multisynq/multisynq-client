@@ -1,0 +1,19 @@
+{
+  "name": "hello-typescript",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vite-plugin-commonjs": "^0.10.4"
+  },
+  "dependencies": {
+    "@multisynq/client": "^1.0.1"
+  }
+}
