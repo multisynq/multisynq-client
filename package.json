@@ -6,10 +6,12 @@
   "exports": {
     ".": {
       "node": {
+        "types": "./dist/multisynq-client.d.ts",
         "import": "./dist/multisynq-client-node.mjs",
         "require": "./dist/multisynq-client-node.cjs"
       },
       "default": {
+        "types": "./dist/multisynq-client.d.ts",
         "import": "./dist/multisynq-client.mjs",
         "require": "./dist/multisynq-client.cjs"
       }
