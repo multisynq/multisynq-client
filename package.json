@@ -1,6 +1,6 @@
 {
   "name": "@multisynq/client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Real-time multiplayer framework for web applications",
   "author": "Croquet Labs",
   "exports": {
