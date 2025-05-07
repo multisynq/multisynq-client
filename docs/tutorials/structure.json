@@ -17,8 +17,8 @@
     "1_6_multiblaster": {
         "title": "🕹️ Multiblaster"
     },
-    "2_1_model_view_reflector": {
-        "title": "💡 Model-View-Reflector"
+    "2_1_model_view_synchronizer": {
+        "title": "💡 Model-View-Synchronizer"
     },
     "2_2_writing_a_multisynq_app": {
         "title": "💡 Writing a Multisynq Application"
