@@ -18,14 +18,22 @@ Please join the Multisynq [**Developer Discord**](https://multisynq.io/discord/)
 **_First, get a free Multisynq API key from [multisynq.io/coder](https://multisynq.io/coder/)_**
 _(you can also run your own server but you won't get the benefit of automatic global scaling)_
 
-Multisynq runs fine without a bundler. Just put it in a script tag:
+Multisynq runs fine without a bundler. Just put it in a script tag in your HTML:
 ```HTML
 <meta charset="utf-8">
-<script src="https://cdn.jsdelivr.net/npm/@multisynq/client@1/bundled/multisynq-client.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@multisynq/client@@CLIENT_VERSION@/bundled/multisynq-client.min.js"></script>
 ```
 This makes `Multisynq` globally available. The `charset="utf-8"` declaration is necessary to get identical code hashing across browsers.
 
-_Alternatively, use the package with a bundler:_
+You can also import it directly as a module in your JS file:
+
+```JS
+import * as Multisynq from "https://cdn.jsdelivr.net/npm/@multisynq/client@@CLIENT_VERSION@/bundled/multisynq-client.esm.js";
+```
+
+That same module URL works fine in HTML in an import map.
+
+**_Alternatively, use the package with a bundler:_**
 
 ```SH
 npm install @multisynq/client
@@ -36,7 +44,7 @@ Then import it in your JS file:
 import * as Multisynq from "@multisynq/client"
 ```
 
-Again, make sure to specify `charset="utf-8"` for your HTML or your script tags.
+Again, make sure to specify the `charset` for your HTML or your script tags.
 
 ## Main Concepts
 
