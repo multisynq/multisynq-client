@@ -10,7 +10,7 @@ import {
 } from "@croquet/croquet";
 
 const VERSION = process.env.MULTISYNQ_VERSION || "0.0.0";
-console.log(`%cMultisynq ${VERSION}`, "color: blue;");
+console.log(`Multisynq ${VERSION}`);
 
 export {
     Model,
