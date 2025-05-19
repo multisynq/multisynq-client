@@ -45,7 +45,7 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "@croquet/croquet": "^2.0.1"
+    "@croquet/croquet": "^2.0.2"
   },
   "devDependencies": {
     "@types/node": "^22.7.5",
