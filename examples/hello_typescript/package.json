@@ -14,6 +14,6 @@
     "vite-plugin-commonjs": "^0.10.4"
   },
   "dependencies": {
-    "@multisynq/client": "^1.0.1"
+    "@multisynq/client": "^1.0.2"
   }
 }
