@@ -64,9 +64,9 @@ The views interact with the models through **events**. When you publish an event
 
 **_THE MAIN RULE OF MULTISYNQ IS THAT THE MODEL MUST BE COMPLETELY SELF-CONTAINED!_**
 
-_Model code must not access any state outside the model, and the model state must never be changed from the view directly. The view can read from a model but must never write. Any externak change to the model must be via a published event that the model subscribes to._
+_Model code must not access any state outside the model, and the model state must never be changed from the view directly. The view can read from a model but must never write. Any external change to the model must be via a published event that the model subscribes to._
 
-There are no special data structures you need to use, and the whole model is synchronized automatically wothout designating which parts to synchronize. Inside the model you can use almost any JavaScript, *except* for storing functions (that precludes any async execution, too). That's because the entire state of the model needs to be snapshottable, and JavaScript code cannot access state captured in functions.
+There are no special data structures you need to use, and the whole model is synchronized automatically without designating which parts to synchronize. Inside the model you can use almost any JavaScript, *except* for storing functions (that precludes any async execution, too). That's because the entire state of the model needs to be snapshottable, and JavaScript code cannot access state captured in functions.
 
 ## Creating a Multisynq App
 
