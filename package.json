@@ -45,10 +45,10 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "@croquet/croquet": "^2.0.3"
+    "@croquet/croquet": "^2.0.4"
   },
   "devDependencies": {
-    "@types/node": "^22.15.29",
+    "@types/node": "^22.15.30",
     "esbuild": "^0.25.5",
     "typescript": "^5.8.3"
   }
