@@ -3,8 +3,11 @@
 We basically need to do a package release for every `@croquet/croquet` release. Then release / update all the downstream packages / repos:
 
 [ ] release new client from this repo via `npm publish`
-
+  - `npm i @croquet/croquet@latest`
+  - global replace old version number with new version number
   - see earlier commits for the files to change
+  - commit, test, push
+  - `npm publish`
 
 [ ] in the `croquet-docs` repo, rebuild `multisynq` docs
 
