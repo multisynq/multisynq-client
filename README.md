@@ -15,11 +15,11 @@ Get a free API key from [multisynq.io](https://multisynq.io/coder).
 
 You can also use the Multisynq pre-bundled files, e.g. via a script tag
 
-    <script src="https://cdn.jsdelivr.net/npm/@multisynq/client@1.0.3/bundled/multisynq-client.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@multisynq/client@1.0.4/bundled/multisynq-client.min.js"></script>
 
 or via direct import as a module
 
-    import * as Multisynq from "https://cdn.jsdelivr.net/npm/@multisynq/client@1.0.3/bundled/multisynq-client.esm.js";
+    import * as Multisynq from "https://cdn.jsdelivr.net/npm/@multisynq/client@1.0.4/bundled/multisynq-client.esm.js";
 
 Structure your app into a synchronized part (subclassed from `Multisynq.Model`) and a local part interacting with it (subclassed from `Multisynq.View`). Uses `Multisynq.Session.join()` with your API key to join a session.
 
