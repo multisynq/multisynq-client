@@ -519,7 +519,7 @@ in animation quality.
 Now we add a persistent highscore. Multisynq automatically snapshots the model data and
 keeps that session state even when everyone leaves the session. When you resume it later by joining the session, everything will continue just as before. That means a highscore table in the model would appear to be "persistent".
 
-However, whenever we change the model code, a new session is created, even it has the
+However, whenever we change the model code, a new session is created, even if it has the
 same name (internally, Multisynq takes a hash of the registered model class source code).
 The old session state becomes inaccessible, because for one we cannot know if the
 new code will work with the old state, but more importantly, every client in the session
@@ -527,10 +527,10 @@ needs to execute exactly the same code to ensure determinism. Otherwise, differe
 would compute different states, and the session would diverge.
 
 To keep important data from a previous session of the same name, we need to use Multisynq's
-explicit persistence. An app can call `persistSession()` with some JSON data to store
+explicit persistence. An app can call [persistSession()]{@link Model#persistSession} with some JSON data to store
 that persistent state. When a new session is started (no snapshot exists) but there is
 some persisted data from the previous session of the same name, this will be passed
-into the root model's `init()` method as a second argument.
+into the root model's [init()]{@link Model#init} method as a second argument.
 
 We add a text input field for players' initials (or an emoji).
 Its value is both published to the model, and kept in `localStorage` for the view,
@@ -611,6 +611,9 @@ that data.
 
 From this point on, even when you change the model code, the highscores
 will always be there.
+
+Learn more about persistence in the [Persistence API]{@tutorial 2_A_persistence} docs.
+
 
 ## Step 9: Support for mobile etc. 📱
 
