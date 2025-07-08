@@ -2,6 +2,7 @@ import esbuild from 'esbuild';
 import path from 'path';
 import fs from 'fs';
 import { replace } from 'esbuild-plugin-replace';
+import { nodeExternalsPlugin } from 'esbuild-node-externals';
 
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 const VERSION = pkg.version;
@@ -43,39 +44,43 @@ const node_webrtc_import = `
     await globalThis.loadingDataChannel;
 `;
 
-function createReplacePlugin(is_node) {
-  return replace({
-    include: /\.js$/,
-    exclude: /node_modules/,
-    values: {
-      '_IS_NODE_': is_node.toString(),
-      '_ENSURE_WEBSOCKET_': (is_node ? `\nimport * as _WS from 'ws';\nglobalThis.WebSocket = _WS.WebSocket;\n` : ''),
-      '_ENSURE_RTCPEERCONNECTION_': (is_node ? node_webrtc_import : ''),
-      '_HTML_MODULE_': (is_node ? 'node-html' : 'html'),
-      '_URLOPTIONS_MODULE_': (is_node ? 'node-urlOptions' : 'urlOptions'),
-      '_STATS_MODULE_': (is_node ? 'node-stats' : 'stats'),
-      '_MESSENGER_MODULE_': (is_node ? 'node-messenger' : 'messenger')
-    },
-  });
+function createPlugins(is_node, bundle_all) {
+  const plugins = [
+    replace({
+      include: /\.js$/,
+      exclude: /node_modules/,
+      values: {
+        '_IS_NODE_': is_node.toString(),
+        '_ENSURE_WEBSOCKET_': (is_node ? `\nimport * as _WS from 'ws';\nglobalThis.WebSocket = _WS.WebSocket;\n` : ''),
+        '_ENSURE_RTCPEERCONNECTION_': (is_node ? node_webrtc_import : ''),
+        '_HTML_MODULE_': (is_node ? 'node-html' : 'html'),
+        '_URLOPTIONS_MODULE_': (is_node ? 'node-urlOptions' : 'urlOptions'),
+        '_STATS_MODULE_': (is_node ? 'node-stats' : 'stats'),
+        '_MESSENGER_MODULE_': (is_node ? 'node-messenger' : 'messenger')
+      },
+    }),
+  ];
+
+  // by default, all modules are bundled
+  if (!bundle_all) {
+    // bundle internal modules but not node_modules
+    plugins.push(nodeExternalsPlugin());
+  }
+
+  return plugins;
 }
 
 esbuild.build({
   ...COMMON,
   format: 'esm',
   outfile: 'dist/multisynq-client.mjs',
-  external: ['*'], // do not bundle any dependencies
-  plugins: [
-    createReplacePlugin(false),
-  ],
+  plugins: createPlugins(false, false),
 }).then(() => {
   esbuild.build({
     ...COMMON,
     format: 'cjs',
     outfile: 'dist/multisynq-client.cjs',
-    external: ['*'], // do not bundle any dependencies
-    plugins: [
-      createReplacePlugin(false),
-    ],
+    plugins: createPlugins(false, false),
   });
 }).then(() => {
   esbuild.build({
@@ -83,18 +88,14 @@ esbuild.build({
     format: 'iife',
     outfile: 'bundled/multisynq-client.min.js',
     globalName: 'Multisynq',
-    plugins: [
-      createReplacePlugin(false),
-    ],
+    plugins: createPlugins(false, true),
   });
 }).then(() => {
   esbuild.build({
     ...COMMON,
     format: 'esm',
     outfile: 'bundled/multisynq-client.esm.js',
-    plugins: [
-      createReplacePlugin(false),
-    ],
+    plugins: createPlugins(false, true),
   });
 }).then(() => {
   esbuild.build({
@@ -102,10 +103,7 @@ esbuild.build({
     format: 'cjs',
     platform: 'node',
     outfile: 'dist/multisynq-client-node.cjs',
-    external: ['*'], // do not bundle any dependencies
-    plugins: [
-      createReplacePlugin(true),
-    ],
+    plugins: createPlugins(true, false),
   });
 }).then(() => {
   esbuild.build({
@@ -113,10 +111,7 @@ esbuild.build({
     format: 'esm',
     platform: 'node',
     outfile: 'dist/multisynq-client-node.mjs',
-    external: ['*'], // do not bundle any dependencies
-    plugins: [
-      createReplacePlugin(true),
-    ],
+    plugins: createPlugins(true, false),
   });
 }).then(() => {
   generateTypes();
