@@ -45,11 +45,20 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "@croquet/croquet": "^2.0.4"
+    "@stdlib/stdlib": "^0.3.2",
+    "crypto-js": "^4.2.0",
+    "fast-json-stable-stringify": "^2.1.0",
+    "fastpriorityqueue": "^0.7.5",
+    "minimist": "^1.2.8",
+    "node-datachannel": "^0.28.0",
+    "pako": "^2.1.0",
+    "toastify-js": "^1.12.0",
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@types/node": "^22.15.30",
     "esbuild": "^0.25.5",
+    "esbuild-plugin-replace": "^1.3.0",
     "typescript": "^5.8.3"
   }
 }

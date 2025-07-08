@@ -7,7 +7,7 @@ import {
     Data,
     Constants,
     App,
-} from "@croquet/croquet";
+} from "./client/croquet";
 
 const VERSION = process.env.MULTISYNQ_VERSION || "0.0.0";
 console.log(`Multisynq ${VERSION}`);
@@ -33,8 +33,8 @@ const Multisynq = {
 };
 
 // mimic how Croquet does it
-(Model as any).Multisynq = Multisynq;
-(View as any).Multisynq = Multisynq;
+Model.Multisynq = Multisynq;
+View.Multisynq = Multisynq;
 
 
 if (typeof globalThis !== 'undefined') {
