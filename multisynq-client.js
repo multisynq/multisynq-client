@@ -9,7 +9,7 @@ import {
     App,
 } from "./client/croquet";
 
-const VERSION = process.env.MULTISYNQ_VERSION || "0.0.0";
+const VERSION = _MULTISYNQ_VERSION_ || "0.0.0"; // replaced by esbuild
 console.log(`Multisynq ${VERSION}`);
 
 export {

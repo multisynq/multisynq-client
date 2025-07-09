@@ -6,7 +6,7 @@ export { Session, Constants, deprecatedStartSession as startSession } from "./sr
 export { App } from "./src/_HTML_MODULE_"; // eslint-disable-line import/no-unresolved
 
 // unofficial exports
-export { default as Controller, CROQUET_VERSION as VERSION } from "./src/controller";
+export { default as Controller, MULTISYNQ_VERSION as VERSION } from "./src/controller";
 export { currentRealm } from "./src/realms";
 export { Messenger } from "./src/_MESSENGER_MODULE_"; // eslint-disable-line import/no-unresolved
 

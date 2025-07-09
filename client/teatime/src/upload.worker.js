@@ -10,14 +10,16 @@ import HmacSHA256 from "crypto-js/hmac-sha256";
 // NOTE: if you add a new import, you must also add it to "dependencies" in package.json
 //       so thet it gets bundled. The "peerDependencies" are not bundled.
 
+// the esbuild config will replace the line below with an import in the case of a Node.js build
+// _IMPORT_WORKER_THREADS_
+
 /* eslint-disable-next-line */
-const NODE = _IS_NODE_; // replaced by rollup
+const NODE = _IS_NODE_; // replaced by esbuild
 
 let poster;
 let fetcher = fetch;
 if (NODE) {
-    /* eslint-disable global-require */
-    const { parentPort } = require('worker_threads');
+    const { parentPort } = _WORKER_THREADS; // imported above
     parentPort.on('message', msg => handleMessage({ data: msg }));
     poster = msg => parentPort.postMessage({ data: msg });
 } else {
@@ -29,7 +31,7 @@ const offlineFiles = new Map();
 
 function handleMessage(msg) {
     const { job, cmd, server, path: templatePath, buffer, keyBase64, gzip,
-        referrer, id, appId, persistentId, CROQUET_VERSION, debug, what, offline } = msg.data;
+        referrer, id, appId, persistentId, MULTISYNQ_VERSION, debug, what, offline } = msg.data;
     if (offline) fetcher = offlineStore;
     switch (cmd) {
         case "uploadEncrypted": uploadEncrypted(templatePath); break;
@@ -92,7 +94,7 @@ function handleMessage(msg) {
                 "X-Croquet-App": appId,
                 "X-Croquet-Id": persistentId,
                 "X-Croquet-Session": id,
-                "X-Croquet-Version": CROQUET_VERSION,
+                "X-Croquet-Version": MULTISYNQ_VERSION,
                 "X-Croquet-Path": (new URL(referrer)).pathname,
             },
             referrer

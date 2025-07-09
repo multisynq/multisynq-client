@@ -1,11 +1,10 @@
-/* global croquet_build_process */
 import stableStringify from "fast-json-stable-stringify";
 import WordArray from "crypto-js/lib-typedarrays";
 import sha256 from "crypto-js/sha256";
 import urlOptions from "./_URLOPTIONS_MODULE_"; // eslint-disable-line import/no-unresolved
 import { App } from "./_HTML_MODULE_"; // eslint-disable-line import/no-unresolved
 
-const NODE = croquet_build_process.env.CROQUET_PLATFORM === 'node';
+const NODE =  _IS_NODE_; // replaced by esbuild
 
 let digest;
 if (globalThis.crypto && globalThis.crypto.subtle && typeof globalThis.crypto.subtle.digest === "function") {

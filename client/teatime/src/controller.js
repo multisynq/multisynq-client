@@ -1,5 +1,3 @@
-/* global croquet_build_process */
-
 import stableStringify from "fast-json-stable-stringify";
 import { algo } from "crypto-js/core";
 import Base64 from "crypto-js/enc-base64";
@@ -11,9 +9,11 @@ import HmacSHA256 from "crypto-js/hmac-sha256";
 import pako from "pako"; // gzip-aware compressor
 import { OfflineSocket } from "./offline";
 import { CroquetWebRTCConnection } from "./webrtc";
+import UploadWorkerFactory from './upload.worker.js';
 
-// the rollup config will replace the line below with an import in the case of a Node.js build
+// the esbuild config will replace the lines below with imports in the case of a Node.js build
 // _ENSURE_WEBSOCKET_
+// _ENSURE_WORKER_
 
 import { Stats } from "./_STATS_MODULE_"; // eslint-disable-line import/no-unresolved
 import urlOptions from "./_URLOPTIONS_MODULE_"; // eslint-disable-line import/no-unresolved
@@ -30,13 +30,14 @@ import VirtualMachine, { Message, inSequence, propertyAccessor } from "./vm";
 // only newer clients get to use it
 const PROTOCOL_VERSION = 1;
 
-export const CROQUET_VERSION = croquet_build_process.env.CROQUET_VERSION || "<unknown>";
-const NODE = croquet_build_process.env.CROQUET_PLATFORM === "node";
+// replaced by esbuild
+export const MULTISYNQ_VERSION = _MULTISYNQ_VERSION_ || "<unknown>";
+const NODE = _IS_NODE_;
 
 // use dev reflectors for pre-release SDKs, unless dev=false given
 // (only needed for periods when code changes below require dev reflectors,
 // comment out once deployed to production reflectors)
-// if (!("dev" in urlOptions) && (CROQUET_VERSION === "<unknown>" || CROQUET_VERSION.includes('-'))) urlOptions.dev = true;
+// if (!("dev" in urlOptions) && (MULTISYNQ_VERSION === "<unknown>" || MULTISYNQ_VERSION.includes('-'))) urlOptions.dev = true;
 
 // dev reflectors are used for pages served from /dev
 // everything else uses api.croquet.io/reflector/v1
@@ -53,8 +54,8 @@ export const OLD_DATA_SERVER = OLD_DOWNLOAD_SERVER;
 let DEBUG = null;
 
 function logVersion() {
-    if (NODE) console.log("Croquet " + CROQUET_VERSION);
-    else console.log("%cCroquet%c %c" + CROQUET_VERSION, "color:#F0493E", "color:inherit", `color:${CROQUET_VERSION.includes('+') ? "#909" : "inherit"}`);
+    if (NODE) console.log("Croquet " + MULTISYNQ_VERSION);
+    else console.log("%cCroquet%c %c" + MULTISYNQ_VERSION, "color:#F0493E", "color:inherit", `color:${MULTISYNQ_VERSION.includes('+') ? "#909" : "inherit"}`);
 }
 
 function initOptions() {
@@ -224,8 +225,8 @@ let DEPRECATED_DEFAULT_KEY; // initialized only when needed, for speed
 
 function randomString() { return Math.floor(Math.random() * 36**10).toString(36); }
 
-// start upload worker (upload.js)
-const UploadWorker = new Worker("./upload.js");
+// start upload worker (upload.worker.js)
+const UploadWorker = UploadWorkerFactory();
 UploadWorker.onerror = e => console.error(`UploadWorker error: ${e.message}`);
 let UploadJobs = 0;
 
@@ -477,7 +478,7 @@ export default class Controller {
         const persistentId = await hashNameAndOptions(name, persistentParams);
         // on DePIN, token is undefined
         const { developerId, token } = await this.verifyApiKey(apiKey, appId, persistentId);
-        const { id, codeHash, computedCodeHash } = await hashSessionAndCode(persistentId, developerId, sessionParams, hashOverride, CROQUET_VERSION);
+        const { id, codeHash, computedCodeHash } = await hashSessionAndCode(persistentId, developerId, sessionParams, hashOverride, MULTISYNQ_VERSION);
         if (!this.tove) this.tove = await this.encrypt(id);
         if (viewData && !this.viewDataEncrypted) this.viewDataEncrypted = await this.encryptPayload(viewData);
         if (DEBUG.session) console.log(`${App.libName} session "${name}":
@@ -596,7 +597,7 @@ export default class Controller {
                         "X-Croquet-Auth": apiKey,
                         "X-Croquet-App": appId,
                         "X-Croquet-Id": persistentId,
-                        "X-Croquet-Version": CROQUET_VERSION,
+                        "X-Croquet-Version": MULTISYNQ_VERSION,
                         "X-Croquet-Path": (new URL(App.referrerURL())).pathname,
                     },
                     referrer: App.referrerURL(),
@@ -665,7 +666,7 @@ export default class Controller {
             seq,
             date: (new globalThis.CroquetViewDate()).toISOString(), // mar 2022: this is now running in Model code
             host: NODE ? "localhost" : window.location.hostname,
-            sdk: CROQUET_VERSION,
+            sdk: MULTISYNQ_VERSION,
         };
         delete snapshot.meta.hash; // old hash is invalid
         return snapshot;
@@ -1070,7 +1071,7 @@ export default class Controller {
                 id: this.id,
                 appId,
                 persistentId,
-                CROQUET_VERSION,
+                MULTISYNQ_VERSION,
                 debug,
                 what,
                 offline: DEBUG.offline,
@@ -1666,7 +1667,7 @@ export default class Controller {
             url,                    // for sign func
             // ...to here
             persistentId,           // for sign func
-            sdk: CROQUET_VERSION,   // for sign func
+            sdk: MULTISYNQ_VERSION,   // for sign func
             developerId,            // for logging
             version: PROTOCOL_VERSION, // protocol version
             user,                   // viewId or [viewId] or { id, data }

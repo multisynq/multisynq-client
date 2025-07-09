@@ -1,4 +1,3 @@
-/* global croquet_build_process */
 import { App } from "./_HTML_MODULE_"; // eslint-disable-line import/no-unresolved
 import urlOptions from "./_URLOPTIONS_MODULE_"; // eslint-disable-line import/no-unresolved
 import { Messenger } from "./_MESSENGER_MODULE_"; // eslint-disable-line import/no-unresolved
@@ -11,7 +10,7 @@ import Data from "./data";
 import Controller, { sessionController } from "./controller";
 import VirtualMachine from "./vm";
 
-const NODE = croquet_build_process.env.CROQUET_PLATFORM === 'node';
+const NODE = _IS_NODE_; // replaced by esbuild
 
 export function deprecatedStartSession(...args) {
     App.showMessage(`${App.libName}.startSession() is deprecated, please use ${App.libName}.Session.join()`, { level: "warning", only: "once"});
