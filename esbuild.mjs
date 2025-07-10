@@ -45,7 +45,7 @@ function createPlugins(is_node, bundle_all, esm) {
   if (is_node && bundle_all) {
     throw new Error('Cannot bundle all modules in node');
   }
-  // plugins for building worker
+  // plugins for building worker (upload.worker.js)
   const workerPlugins = [
     replace({
       include: /\.js$/,
@@ -57,20 +57,13 @@ function createPlugins(is_node, bundle_all, esm) {
       },
     }),
   ];
-  if (!bundle_all) {
-    workerPlugins.push(nodeExternalsPlugin({
-      allowList: [
-        /^crypto-js/,
-        /^pako/,
-      ],
-    }));
-  }
   // plugins for building client
   const plugins = [
     inlineWorkerPlugin({
       // config for building worker
-      format: esm ? 'esm' : 'cjs',
+      format: 'esm', // only esm appears to work, even in cjs builds
       minify: false,
+      bundle: true, // bundle everything in the worker
       platform: is_node ? 'node' : 'browser',
       plugins: workerPlugins,
     }),
@@ -108,13 +101,13 @@ function createPlugins(is_node, bundle_all, esm) {
 esbuild.build({
   ...COMMON,
   format: 'esm',
-  outfile: 'dist/multisynq-client.mjs',
+  outfile: 'dist/multisynq-client.mjs.js',
   plugins: createPlugins(false, false, true),
 }).then(() => {
   esbuild.build({
     ...COMMON,
     format: 'cjs',
-    outfile: 'dist/multisynq-client.cjs',
+    outfile: 'dist/multisynq-client.cjs.js',
     plugins: createPlugins(false, false, false),
   });
 }).then(() => {
@@ -137,7 +130,7 @@ esbuild.build({
     ...COMMON,
     format: 'cjs',
     platform: 'node',
-    outfile: 'dist/multisynq-client-node.cjs',
+    outfile: 'dist/multisynq-client-node.cjs.js',
     plugins: createPlugins(true, false, false),
   });
 }).then(() => {
@@ -145,7 +138,7 @@ esbuild.build({
     ...COMMON,
     format: 'esm',
     platform: 'node',
-    outfile: 'dist/multisynq-client-node.mjs',
+    outfile: 'dist/multisynq-client-node.mjs.js',
     plugins: createPlugins(true, false, true),
   });
 }).then(() => {
