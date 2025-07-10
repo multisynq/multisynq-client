@@ -48,7 +48,7 @@ const COMMON = {
   entryPoints: ['multisynq-client.js'],
   bundle: true,
   sourcemap: true,
-  minify: false,
+  minify: true,
   banner: {
     js:
       `// (C) ${git_date.slice(0, 4)} ${pkg.author}\n` +
@@ -95,7 +95,7 @@ function createPlugins(is_node, bundle_all, esm) {
     inlineWorkerPlugin({
       // config for building worker
       format: 'esm', // only esm appears to work, even in cjs builds
-      minify: false,
+      minify: true,
       bundle: true, // bundle everything in the worker
       platform: is_node ? 'node' : 'browser',
       plugins: workerPlugins,
@@ -135,7 +135,7 @@ function createPlugins(is_node, bundle_all, esm) {
 esbuild.build({
   ...COMMON,
   format: 'esm',
-  outfile: 'dist/multisynq-client.mjs.js',
+  outfile: 'dist/multisynq-client.esm.js',
   plugins: createPlugins(false, false, true),
 }).then(() => {
   esbuild.build({
@@ -164,7 +164,7 @@ esbuild.build({
     ...COMMON,
     format: 'cjs',
     platform: 'node',
-    outfile: 'dist/multisynq-client-node.cjs.js',
+    outfile: 'dist/multisynq-client-node.cjs',
     plugins: createPlugins(true, false, false),
   });
 }).then(() => {
@@ -172,7 +172,7 @@ esbuild.build({
     ...COMMON,
     format: 'esm',
     platform: 'node',
-    outfile: 'dist/multisynq-client-node.mjs.js',
+    outfile: 'dist/multisynq-client-node.mjs',
     plugins: createPlugins(true, false, true),
   });
 }).then(() => {
