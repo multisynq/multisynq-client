@@ -1,16 +1,49 @@
 import esbuild from 'esbuild';
-import path from 'path';
 import fs from 'fs';
+import os from 'os';
+import path from 'path';
+import { execSync } from 'child_process';
 import { replace } from 'esbuild-plugin-replace';
 import { nodeExternalsPlugin } from 'esbuild-node-externals';
 import inlineWorkerPlugin from './esbuild-plugin-inline-worker.mjs';
 
+// We need a unique version string for each single build because this gets hashed
+// into the Session ID instead of the whole library source code.
+// The version string is derived from the package.json version and the git commit.
+// release: x.y.z
+// prerelease: x.y.z-v
+// clean tree: x.y.z-v+branch.commit
+// otherwise: x.y.z-v+branch.commit.user.date
+
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-const VERSION = pkg.version;
-const AUTHOR = pkg.author;
+const sources = ["./multisynq-client.js", "./client", "./esbuild.mjs"]; // check if these are committed
+const git_branch = execSync("git rev-parse --abbrev-ref HEAD").toString().trim();                // current branch
+const git_commit = execSync("git log -1 --pretty=format:%H  -- .").toString().trim();            // last commit hash
+const git_date = execSync("git show --format='%as' -s " + git_commit).toString().trim();         // last commit date
+const git_message = execSync("git show --format='%s' -s " + git_commit).toString().trim();       // last commit message
+const git_bumped = git_message.endsWith(pkg.version);                                            // last commit was "changelog and version bump to x.y.z"
+const git_clean = !execSync("git status --porcelain -- " + sources.join(" ")).toString().trim(); // relevant sources are committed
+
+const release = !pkg.version.includes('-');
+const prerelease = pkg.version.includes('-') && (git_branch === "main" || git_branch === "dev") && git_bumped && git_clean;
+
+if (release) {
+  // if you run into this error while developing, change the version in package.json to a prerelease version x.y.z-v
+  if (!git_clean) throw Error(`Release build ${pkg.version} but git is not clean`);
+  if (!git_bumped) throw Error(`Release build ${pkg.version} but not bumped`);
+  if (git_branch !== "main") throw Error(`Release build ${pkg.version} but not on main branch`);
+}
 
 const date = new Date();
 
+const VERSION = release || prerelease ? pkg.version
+:  git_clean ? `${pkg.version}+${git_branch}.${git_commit}`
+: `${pkg.version}+${git_branch}.${git_commit}.${os.userInfo().username}.${date.toISOString()}`;
+
+console.log(`Building Multisynq ${VERSION}`);
+console.log(`  bumped: ${git_bumped}, clean: ${git_clean}`);
+
+// common options for all builds
 const COMMON = {
   entryPoints: ['multisynq-client.js'],
   bundle: true,
@@ -18,7 +51,7 @@ const COMMON = {
   minify: false,
   banner: {
     js:
-      `// (C) ${date.getFullYear()} ${AUTHOR}\n` +
+      `// (C) ${git_date.slice(0, 4)} ${pkg.author}\n` +
       `// Multisynq Client v${VERSION}\n` +
       `// Built on ${date.toISOString()}\n`
   },
@@ -98,6 +131,7 @@ function createPlugins(is_node, bundle_all, esm) {
   return plugins;
 }
 
+// build the client in various formats
 esbuild.build({
   ...COMMON,
   format: 'esm',
@@ -143,11 +177,14 @@ esbuild.build({
   });
 }).then(() => {
   generateTypes();
+}).catch(error => {
+  console.error(error);
+  process.exit(1);
 });
 
 
 function generateTypes() {
-  // copy the types.d.ts file from @croquet/croquet to dist/multisynq-client.d.ts
+  // copy the types.d.ts file from client/types.d.ts to dist/multisynq-client.d.ts
   // and change the names to Multisynq
   const inputFile = path.join('client', 'types.d.ts');
   const outputFile = path.join('dist', 'multisynq-client.d.ts');
