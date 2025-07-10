@@ -3,11 +3,16 @@
 We basically need to do a package release for every `@croquet/croquet` release. Then release / update all the downstream packages / repos:
 
 [ ] release new client from this repo via `npm publish`
-  - `npm i @croquet/croquet@latest`
-  - global replace old version number with new version number
-  - see earlier commits for the files to change
-  - commit, test, push
-  - `npm publish`
+  - replace old version number with new version number in README
+  - commit with a message ending in the version number (e.g. "Prerelease 1.1.0-0")
+  - `npm run build`, make sure it prints the version number correctly (without any +... extension, "bumped" and "clean" should both be true)
+    ```
+    Building Multisynq 1.1.0-0
+      bumped: true, clean: true
+    ```
+  - test, push
+  - for release: `npm publish` (and continue with next steps)
+  - for prerelease: `npm publish --tag pre` (and skip the rest)
 
 [ ] in the `croquet-docs` repo, rebuild `multisynq` docs
 
