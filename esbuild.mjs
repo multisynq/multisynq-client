@@ -132,51 +132,44 @@ function createPlugins(is_node, bundle_all, esm) {
 }
 
 // build the client in various formats
-esbuild.build({
+cleanOutputDirectories([
+  'dist',
+  'bundled',
+]).then(() => esbuild.build({                 // for browser bundlers
+  ...COMMON,
+  format: 'cjs',
+  outfile: 'dist/multisynq-client.cjs.js',
+  plugins: createPlugins(false, false, false),
+})).then(() => esbuild.build({
   ...COMMON,
   format: 'esm',
   outfile: 'dist/multisynq-client.esm.js',
   plugins: createPlugins(false, false, true),
-}).then(() => {
-  esbuild.build({
-    ...COMMON,
-    format: 'cjs',
-    outfile: 'dist/multisynq-client.cjs.js',
-    plugins: createPlugins(false, false, false),
-  });
-}).then(() => {
-  esbuild.build({
-    ...COMMON,
-    format: 'iife',
-    outfile: 'bundled/multisynq-client.min.js',
-    globalName: 'Multisynq',
-    plugins: createPlugins(false, true, false),
-  });
-}).then(() => {
-  esbuild.build({
-    ...COMMON,
-    format: 'esm',
-    outfile: 'bundled/multisynq-client.esm.js',
-    plugins: createPlugins(false, true, true),
-  });
-}).then(() => {
-  esbuild.build({
-    ...COMMON,
-    format: 'cjs',
-    platform: 'node',
-    outfile: 'dist/multisynq-client-node.cjs',
-    plugins: createPlugins(true, false, false),
-  });
-}).then(() => {
-  esbuild.build({
-    ...COMMON,
-    format: 'esm',
-    platform: 'node',
-    outfile: 'dist/multisynq-client-node.mjs',
-    plugins: createPlugins(true, false, true),
-  });
-}).then(() => {
-  generateTypes();
+})).then(() => esbuild.build({                 // for node
+  ...COMMON,
+  format: 'cjs',
+  platform: 'node',
+  outfile: 'dist/multisynq-client-node.cjs',
+  plugins: createPlugins(true, false, false),
+})).then(() => esbuild.build({
+  ...COMMON,
+  format: 'esm',
+  platform: 'node',
+  outfile: 'dist/multisynq-client-node.mjs',
+  plugins: createPlugins(true, false, true),
+})).then(() => esbuild.build({                 // for CDN (pre-bundled)
+  ...COMMON,
+  format: 'iife',
+  outfile: 'bundled/multisynq-client.min.js',
+  globalName: 'Multisynq',
+  plugins: createPlugins(false, true, false),
+})).then(() => esbuild.build({
+  ...COMMON,
+  format: 'esm',
+  outfile: 'bundled/multisynq-client.esm.js',
+  plugins: createPlugins(false, true, true),
+})).then(() => {
+  generateTypes()
 }).catch(error => {
   console.error(error);
   process.exit(1);
@@ -193,5 +186,13 @@ function generateTypes() {
     .replace(/@croquet\/croquet/g, '@multisynq/client')
     .replace(/Croquet/g, 'Multisynq');
   fs.writeFileSync(outputFile, modifiedData, 'utf8');
+}
+
+async function cleanOutputDirectories(outputDirs) {
+  for (const dir of outputDirs) {
+    if (fs.existsSync(dir)) {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  }
 }
 
