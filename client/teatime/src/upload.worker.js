@@ -10,8 +10,8 @@ import HmacSHA256 from "crypto-js/hmac-sha256";
 // NOTE: if you add a new import, you must also add it to "dependencies" in package.json
 //       so thet it gets bundled. The "peerDependencies" are not bundled.
 
-// the esbuild config will replace the line below with an import in the case of a Node.js build
-// _IMPORT_WORKER_THREADS_
+// esbuild will uncomment the line below in the case of a Node.js build
+// _IF_NODE_ import * as _WORKER_THREADS from 'worker_threads';
 
 /* eslint-disable-next-line */
 const NODE = _IS_NODE_; // replaced by esbuild

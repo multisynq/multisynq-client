@@ -53,7 +53,7 @@ function createPlugins(is_node, bundle_all, esm) {
       values: {
         '_IS_NODE_': is_node.toString(),
         '_MULTISYNQ_VERSION_': `"${VERSION}"`,
-        '_IMPORT_WORKER_THREADS_': (is_node ? `\nimport * as _WORKER_THREADS from 'worker_threads';\n` : ''),
+        '_IF_NODE_': (is_node ? '\n' : ''), // uncomment the rest of the line
       },
     }),
   ];
