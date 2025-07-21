@@ -1580,6 +1580,14 @@ export class Message {
     [Symbol.toPrimitive]() { return this.toString(); }
 }
 
+// for snapshotting Model classes
+const MODEL_CLASS = Symbol("MODEL_CLASS");
+const ModelClassSpec = {
+    cls: MODEL_CLASS, // not a class, special-cased when writing a Function
+    write: cls => Model.classToID(cls),
+    read: id => Model.classFromID(id),
+};
+
 const sumForFloat = (() => {
     // use DataView so we can enforce little-endian interpretation of float as ints on any platform
     const buffer = new ArrayBuffer(8);
@@ -1600,6 +1608,7 @@ class VMHasher {
         this.addHasher("Teatime:Message", Message);
         this.addHasher("Teatime:Data", DataHandleSpec);
         this.addHasher("Teatime:QFunc", QFuncSpec);
+        this.addHasher("Teatime:ModelClass", ModelClassSpec);
         for (const [classId, ClassOrSpec] of Model.allClassTypes()) {
             this.addHasher(classId, ClassOrSpec);
         }
@@ -1811,6 +1820,7 @@ class VMWriter {
         this.addWriter("Teatime:Message", Message);
         this.addWriter("Teatime:Data", DataHandleSpec);
         this.addWriter("Teatime:QFunc", QFuncSpec);
+        this.addWriter("Teatime:ModelClass", ModelClassSpec);
         for (const [classId, ClassOrSpec] of Model.allClassTypes()) {
             this.addWriter(classId, ClassOrSpec);
         }
@@ -1953,6 +1963,7 @@ class VMWriter {
                     }
                     case "Function":
                         if (value[QFUNC]) return this.writers.get(QFUNC)(value, path); // uses QFuncSpec
+                        if (Model.classToID(value)) return this.writers.get(MODEL_CLASS)(value, path); // uses ModelClassSpec
                         console.warn(`${App.libName}: found function at ${path}:`, value);
                         throw Error(`${App.libName}: cannot serialize functions except for QFuncs`);
                     default: {
@@ -2127,6 +2138,7 @@ class VMReader {
         this.addReader("Teatime:Message", Message);
         this.addReader("Teatime:Data", DataHandleSpec);
         this.addReader("Teatime:QFunc", QFuncSpec);
+        this.addReader("Teatime:ModelClass", ModelClassSpec);
         this.readers.set("Undefined", () => undefined);
         this.readers.set("NaN", () => NaN);
         this.readers.set("Infinity", sign => sign * Infinity);
