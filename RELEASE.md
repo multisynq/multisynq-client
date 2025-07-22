@@ -1,10 +1,10 @@
 # How to release
 
-We basically need to do a package release for every `@croquet/croquet` release. Then release / update all the downstream packages / repos:
+The multisynq client release consists of publishing the new npm and updating the docs:
 
 [ ] release new client from this repo via `npm publish`
-  - replace old version number with new version number in README
-  - commit with a message ending in the version number (e.g. "Prerelease 1.1.0-0")
+  - replace old version number with new version number in package.json and README
+  - commit with a message ending in the version number (e.g. "Prerelease 1.1.0-0" or "Release 1.1.0")
   - `npm run build`, make sure it prints the version number correctly (without any +... extension, "bumped" and "clean" should both be true)
     ```
     Building Multisynq 1.1.0-0
@@ -14,21 +14,11 @@ We basically need to do a package release for every `@croquet/croquet` release. 
   - for release: `npm publish` (and continue with next steps)
   - for prerelease: `npm publish --tag pre` (and skip the rest)
 
-[ ] in the `croquet-docs` repo, rebuild `multisynq` docs
-
-    cd ../croquet-docs/multisynq
-    npm run build
-    open ../dist/multisynq/multisynq/index.html
-
-[ ] copy resulting docs to `multisynq.io` repo, push to dev, double-check multisynq.dev, merge into `main`, push, double-check multisynq.io
-
-    cd ../../multisynq.io/multisynq/frontend/public/docs
-    rm -r client
-    cp -r ../../../../../croquet-docs/dist/multisynq/multisynq client
+[ ] update docs **tbd**
 
 ## Downstream projects
 
-*Decide which of these need to be updated depending on what changes were made to the Croquet library*
+*Decide which of these need to be updated depending on what changes were made to the library*
 
 [ ] release `multisynq-react` with new dependency
 
