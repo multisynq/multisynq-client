@@ -1192,7 +1192,12 @@ export default class Controller {
                 const payload = {entered: joined||[], exited: left||[], count: active, total};
                 for (const user of payload.entered.concat(payload.exited)) {
                     if (!user.data) continue;
-                    user.data = this.decryptPayload(user.data);
+                    try {
+                        user.data = this.decryptPayload(user.data);
+                    } catch (e) {
+                        console.error("ERROR decrypting viewData, wrong password");
+                        user.data = { error: "failed to decrypt viewData, wrong session password" };
+                    }
                 }
                 // create event message
                 selector = "publishFromModelOnly";
