@@ -1,5 +1,3 @@
-// Multisynq uses Croquet to run the client-side code
-
 import {
     Model,
     View,
@@ -7,9 +5,9 @@ import {
     Data,
     Constants,
     App,
-} from "./client/croquet";
+    VERSION,
+} from "./client/teatime";
 
-const VERSION = _MULTISYNQ_VERSION_ || "0.0.0"; // replaced by esbuild
 console.log(`Multisynq ${VERSION}`);
 
 export {
@@ -32,10 +30,18 @@ const Multisynq = {
     VERSION,
 };
 
-// mimic how Croquet does it
 Model.Multisynq = Multisynq;
 View.Multisynq = Multisynq;
 
+// hook for future browser devtools
+if (typeof __MULTISYNQ_DEVTOOLS__ !== 'undefined') {
+    __MULTISYNQ_DEVTOOLS__.dispatchEvent(new CustomEvent('load', {
+        detail: {
+            version: VERSION,
+            lib: Multisynq,
+        }
+    }));
+}
 
 if (typeof globalThis !== 'undefined') {
     if (globalThis.__MULTISYNQ__) {

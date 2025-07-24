@@ -308,8 +308,8 @@ export class Session {
             get latencies() { return controller.latencies; },
         };
 
-        if ( typeof __CROQUET_DEVTOOLS__ !== 'undefined' ) {
-            __CROQUET_DEVTOOLS__.dispatchEvent(new CustomEvent('session', {
+        if ( typeof __MULTISYNQ_DEVTOOLS__ !== 'undefined' ) {
+            __MULTISYNQ_DEVTOOLS__.dispatchEvent(new CustomEvent('session', {
                 detail: {
                     session,
                     controller,
