@@ -255,7 +255,6 @@ class Model {
      *    either wrap the source and function in a custom type (where `read` would compile the source saved by `write`),
      *    or store the source in a regular property, the function in a dollar property,
      *    and have an accessor that compiles the function lazily when needed.
-     *    (see the source of [multisynq.io/live]{@link https://multisynq.io/live/} for a simple live-coding example)
      *
      * @example <caption>To use the default serializer just declare the class:</caption>
      * class MyModel extends Multisynq.Model {
