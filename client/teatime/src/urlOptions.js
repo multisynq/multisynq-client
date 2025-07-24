@@ -1,4 +1,4 @@
-const sessionFromPath = window && window.location.hostname.endsWith("croquet.studio");
+const sessionFromPath = false; // old server
 let sessionApp = "";
 let sessionArgs = "";
 
@@ -31,7 +31,7 @@ class UrlOptions {
     }
 
     /** Extract session from either path or hash or option
-     * - on croquet.studio, it is "/app/session/with/slashes"
+     * - on an old server, it was "/app/session/with/slashes"
      * - elsewhere, it is "...#session/with/slashes&..."
      * - or optionally, passed as "session=session/with/slashes"
      * @return {String} "" or "session/with/slashes"
@@ -86,10 +86,6 @@ class UrlOptions {
         if (hostname !== "localhost") return false;
         // answer true for a variety of localhost equivalents
         if (actualHostname.endsWith(".ngrok.io")) return true;
-        if (actualHostname === "croquet.io") {
-            const path = window.location.pathname;
-            if (path.match(/^\/(dev|files)\//)) return true;
-        }
         if (window.location.protocol === "file:") return true;
         return ["127.0.0.1", "[::1]"].includes(actualHostname);
     }

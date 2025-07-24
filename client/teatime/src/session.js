@@ -100,7 +100,7 @@ export class Session {
      * @param {Number?} parameters.eventRateLimit - maximum number of events (single or bundled) sent to reflector per second (`1` to `60`; default `20`)
      * @param {String?} parameters.reflector - URL of the reflector to use (default is the public reflector)
      * @param {String?} parameters.files - URL of the file server to use (default is the public file server)
-     * @param {String?} parameters.box - croquet-in-a-box server to use (reflector + file server)
+     * @param {String?} parameters.box - reflector-in-a-box server to use (reflector + file server)
      * @param {String|String[]} parameters.debug - array, or comma-separated string, containing one or more of the following values to enable console logging of the corresponding details
      * (note that you can also enable these temporarily for a deployed app via the `debug` URL parameter, e.g. `?debug=session,snapshot`):
      * | value         | description

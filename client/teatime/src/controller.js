@@ -44,30 +44,16 @@ const NODE = _IS_NODE_;
 // ...unless overridden by a "backend" url option
 // ...unless overridden by a "reflector=<url|region>" url option, which sets the specified url or region
 
-const CLOUDFLARE_REFLECTOR = "wss://croquet.network/reflector/";
-const DEV_CLOUDFLARE_REFLECTOR = "wss://croquet.network/reflector/dev/";
-
 const OLD_UPLOAD_SERVER = "https://croquet.io/files/v1";    // url base of files created before we had API keys
 const OLD_DOWNLOAD_SERVER = "https://files.croquet.io";     // downloads from old bucket (rewritten from old upload url)
 export const OLD_DATA_SERVER = OLD_DOWNLOAD_SERVER;
 
 let DEBUG = null;
 
-function logVersion() {
-    if (NODE) console.log("Croquet " + MULTISYNQ_VERSION);
-    else console.log("%cCroquet%c %c" + MULTISYNQ_VERSION, "color:#F0493E", "color:inherit", `color:${MULTISYNQ_VERSION.includes('+') ? "#909" : "inherit"}`);
-}
-
 function initOptions() {
-    if (!globalThis.__MULTISYNQ__) logVersion();
     // to capture whatever was passed to the latest Session.join({debug:...})
     // call we simply redo this every time establishSession() is called
     // TODO: turn this into a reasonable API
-    // enable some opts by default via dev flag or being on localhost-equivalent
-    const appOnCroquetIo = !NODE && window.location.hostname.match(/^(.*\.)?croquet\.io$/i);
-    const appOnCroquetIoDev = appOnCroquetIo && window.location.pathname.startsWith("/dev/");
-    // const devOrLocal = urlOptions.dev || (urlOptions.dev !== false && "localhost");
-    const devOrCroquetIoDev = urlOptions.dev || (urlOptions.dev !== false && appOnCroquetIoDev);
     DEBUG = {
         messages: urlOptions.has("debug", "messages", false),               // received messages
         sends: urlOptions.has("debug", "sends", false),                     // sent messages
@@ -78,7 +64,7 @@ function initOptions() {
         snapshot: urlOptions.has("debug", "snapshot", false),               // snapshotting, uploading etc
         session: urlOptions.has("debug", "session", false),                 // session logging
         initsnapshot: urlOptions.has("debug", "initsnapshot", true),        // check snapshotting after initFn
-        reflector: urlOptions.has("debug", "reflector", devOrCroquetIoDev), // use dev reflector
+        reflector: urlOptions.has("debug", "reflector", false),             // use dev reflector
         offline: urlOptions.has("debug", "offline", false),                 // short-circuit all requests
     };
     if (DEBUG.offline) App.showMessage(`${App.libName}: offline mode enabled, no multiuser`, { level: "warning"});
@@ -532,7 +518,7 @@ export default class Controller {
             reflector: "none",
         };
 
-        if (urlOptions.box || urlOptions.reflector) { // box is croquet-in-a-box, see session.js
+        if (urlOptions.box || urlOptions.reflector) { // box is reflector-in-a-box, see session.js
             return {
                 apiKey: "none",
                 signServer: "none",
@@ -543,19 +529,19 @@ export default class Controller {
         const keys = {};
         for (const key of apiKeysWithBackend.split(",")) {
             const split = key.lastIndexOf(':');
-            const version = key[split === -1 ? 0 : split+1]; // 1: croquet.io, 2: multisynq.io
-            if (!version?.match(/^[12]$/)) throw Error("Invalid API key: " + key);
+            const version = key[split === -1 ? 0 : split+1]; // 1: deprecated, 2: multisynq.io
+            if (version !== "2") throw Error("Invalid API key: " + key);
             if (version in keys) throw Error(`Duplicate API key versions`);
             keys[version] = {
                 key: split === -1 ? key : key.slice(split + 1),
                 backend: split === -1 ? "" : key.slice(0, split),
             };
         }
-        let defaultToDEPIN = !keys[1]; // default to DEPIN if no croquet.io key
+        let defaultToDEPIN = true;
         if (defaultToDEPIN && keys[2].backend) defaultToDEPIN = keys[2].backend;
         initDEPIN(defaultToDEPIN);
         const key = keys[DEPIN ? 2 : 1];
-        if (!key) throw Error(`No ${DEPIN ? "Multisynq" : "Croquet"} API key provided`);
+        if (!key) throw Error(`No Multisynq API key provided`);
 
         const apiKey = key.key;
         const backend = urlOptions.backend || key.backend;
@@ -605,14 +591,14 @@ export default class Controller {
                 });
             });
             // result from multisynq either has developerId or error.
-            // result from croquet.io has developerId and token.
+            // result from old servers had developerId and token.
             const payload = await response.json();
             const { developerId, error } = payload;
             if (error) throw Error(error);
-            if (DEBUG.session) console.log(`${DEPIN ? "Multisynq" : "Croquet"}: verified API key for developer ${developerId}`);
+            if (DEBUG.session) console.log(`Multisynq: verified API key for developer ${developerId}`);
             return payload;
         } catch (err) {
-            throw Error(`${DEPIN ? "Multisynq" : "Croquet"} API key validation failed for "${apiKey}": ${err.message}`);
+            throw Error(`Multisynq API key validation failed for "${apiKey}": ${err.message}`);
         }
     }
 
@@ -2621,12 +2607,7 @@ class Connection {
             const token = this.controller.sessionSpec.token;
             if (token) reflectorParams.token = token;
             if (urlOptions.reflector) {
-                const cloudflareColo = urlOptions.reflector.toUpperCase();
-                if (cloudflareColo === "CF" || cloudflareColo.match(/^[A-Z]{3}$/)) {
-                    reflectorBase = DEBUG.reflector ? DEV_CLOUDFLARE_REFLECTOR : CLOUDFLARE_REFLECTOR;
-                    if (cloudflareColo.length === 3) reflectorParams.colo = cloudflareColo;
-                }
-                else if (urlOptions.reflector.match(/^[-a-z0-9]+$/i)) reflectorParams.region = urlOptions.reflector;
+                if (urlOptions.reflector.match(/^[-a-z0-9]+$/i)) reflectorParams.region = urlOptions.reflector;
                 else reflectorBase = new URL(urlOptions.reflector, ourUrl).href.replace(/^http/, 'ws');
             }
             if (!reflectorBase.match(/^wss?:/)) throw Error("Cannot interpret reflector address " + reflectorBase);

@@ -150,15 +150,10 @@ function compileQFunc(source, thisVal, env, selfRef) {
             compilerArgs.push(envValues);
         }
     }
-    // Make Croquet available if the word "Croquet" is found in the source
-    if (source.match(/\bCroquet\b/) && !envKeys?.includes("Croquet")) {
-        compilerParams.push("Croquet");
-        compilerArgs.push(Model.Croquet);
-    }
-    // Same for Multisynq
+    // Make Multisynq available if the word "Multisynq" is found in the source
     if (source.match(/\bMultisynq\b/) && !envKeys?.includes("Multisynq")) {
         compilerParams.push("Multisynq");
-        compilerArgs.push(Model.Croquet);
+        compilerArgs.push(Model.Multisynq);
     }
     // use selfRef or an unused variant of "qFunc" as fnVar
     let fnVar = selfRef || "qFunc";

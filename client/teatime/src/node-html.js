@@ -30,7 +30,7 @@ export function displayAppError(where, error, level = "error") {
 }
 
 export const App = {
-    get libName() { return globalThis.__MULTISYNQ__ ? "Multisynq" : "Croquet"; },
+    get libName() { return "Multisynq" },
 
     sessionURL: null,
     root: false, // root for messages, the sync spinner, and the info dock (defaults to document.body)

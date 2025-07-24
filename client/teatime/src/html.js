@@ -752,7 +752,7 @@ const seenMessages = new Set();
 let _sessionURL = defaultSessionURL();
 
 export const App = {
-    get libName() { return globalThis.__MULTISYNQ__ ? "Multisynq" : "Croquet"; },
+    get libName() { return "Multisynq" },
 
     get sessionURL() { return _sessionURL; },
     set sessionURL(url) { _sessionURL = url; displayQRCodeIfNeeded(); },
