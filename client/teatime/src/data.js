@@ -41,7 +41,7 @@ function scramble(key, string) {
 /**
  * **Secure bulk data storage**
  *
- * This Data API allows encrypted bulk data storage. E.g. if a user drops a file into a Croquet
+ * This Data API allows encrypted bulk data storage. E.g. if a user drops a file into a Multisynq
  * application, the contents of that file can be handed off to the Data API for storage.
  * It will be encrypted and uploaded to a file server. Other participants will download and
  * decrypt the data.

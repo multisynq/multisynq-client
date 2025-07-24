@@ -31,11 +31,11 @@ const DEFAULT_EVENT_RATE_LIMIT = 20;
 export class Session {
 
     /**
-     * **Join a Croquet session.**
+     * **Join a Multisynq session.**
      *
      * Joins a session by instantiating the root model (for a new session) or resuming from a snapshot, then constructs the view root instance.
      *
-     * The `appId` identifies each Croquet app. It must be a globally unique identifier following
+     * The `appId` identifies each Multisynq app. It must be a globally unique identifier following
      * the [Android convention](https://developer.android.com/studio/build/application-id),
      * e.g. `"com.example.myapp"`. Each dot-separated segment must start
      * with a letter, and only letters, digits, and underscores are allowed.
@@ -43,14 +43,14 @@ export class Session {
      * The session `name` identifies individual sessions within an app.
      * You can use it for example to create different sessions for different users.
      * That is, a user in session `"ABC"` will not see a user in `"DEF"`.
-     * One simple way to create unique sessions is via `Croquet.App.autoSession()` which will
+     * One simple way to create unique sessions is via `Multisynq.App.autoSession()` which will
      * use or generate a random name in the query part (`?...`) of the current url.
      * (If you use a constant, then all users will end up in the same session.
      * This is what we do in some of our tutorials for simplicity, but actual apps should manage sessions.)
      *
      * The session `password` is used for end-to-end encryption of all data leaving the client.
      * If your app does not need to protect user data, you will still have to provide a constant dummy password.
-     * One simple way to have individual passwords is via `Croquet.App.autoPassword()` which will
+     * One simple way to have individual passwords is via `Multisynq.App.autoPassword()` which will
      * use or generate a random password in the hash part (`#...`) of the current url.
      *
      * A [session id]{@link Model#sessionId} is created from the given session `name` and `options`,
@@ -67,7 +67,7 @@ export class Session {
      * The root view should set up the input and output operations of your application,
      * and create any additional views as to match the application state as found in the models.
      *
-     * Then the Croquet **main loop** is started (unless you pass in a `step: "manual"` parameter, e.g. for WebXR, see example below).
+     * Then the Multisynq **main loop** is started (unless you pass in a `step: "manual"` parameter, e.g. for WebXR, see example below).
      * This uses [requestAnimationFrame()](https://developer.mozilla.org/docs/Web/API/window/requestAnimationFrame)
      * for continuous updating. Each step of the main loop executes in three phases:
      *
@@ -129,22 +129,22 @@ export class Session {
      * ```
      *
      *   where
-     *  - `view` is an instance of the supplied view class, or of Croquet.View if no view class was given
+     *  - `view` is an instance of the supplied view class, or of Multisynq.View if no view class was given
      *  - `step(time)` should be invoked regularly if you selected `manual` stepping, to nudge it to process the latest events from the reflector or generated internally.
      *     The `time` argument is expected to be in milliseconds, monotonically increasing - for example, the time received by a function passed to `window.requestAnimationFrame`.
      *  - `leave()` is an async function for requesting immediate, permanent disconnection from the session.
      * @example <caption>auto name, password, and main loop</caption>
-     * Croquet.Session.join({
+     * Multisynq.Session.join({
      *     apiKey: "your_api_key",                 // paste from multisynq.io/coder
      *     appId: "com.example.myapp",             // namespace for session names
-     *     name: Croquet.App.autoSession(),        // session via URL arg
-     *     password: Croquet.App.autoPassword(),   // password via URL arg
+     *     name: Multisynq.App.autoSession(),        // session via URL arg
+     *     password: Multisynq.App.autoPassword(),   // password via URL arg
      *     model: MyRootModel,
      *     view: MyRootView,
      *     debug: ["session"],
      * });
      * @example <caption>manual name, password, and WebXR main loop</caption>
-     * Croquet.Session.join({ apiKey: "your_api_key", appId: "com.example.myapp", name: "abc", password: "password", model: MyRootModel, view: MyRootView, step: "manual"}).then(session => {
+     * Multisynq.Session.join({ apiKey: "your_api_key", appId: "com.example.myapp", name: "abc", password: "password", model: MyRootModel, view: MyRootView, step: "manual"}).then(session => {
      *     function xrAnimFrame(time, xrFrame) {
      *         session.step(time);
      *         ...
@@ -482,7 +482,7 @@ export class Session {
  *
  * To ensure that all users in a session execute the exact same Model code, the [session id]{@link joinSession}
  * is derived by [hashing]{@link Model.register} the source code of Model classes and value of constants.
- * To hash your own constants, put them into `Croquet.Constants` object.
+ * To hash your own constants, put them into `Multisynq.Constants` object.
  *
  * The constants can be used in both Model and View.
  *
@@ -490,11 +490,11 @@ export class Session {
  * [frozen]{@link https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze}
  * once a session was started, to avoid accidental modification.
  * @example
- * const Q = Croquet.Constants;
+ * const Q = Multisynq.Constants;
  * Q.ANSWER = 42;
  * Q.POWERLEVEL = 9000;
  *
- * class MyModel extends Croquet.Model {
+ * class MyModel extends Multisynq.Model {
  *     init() {
  *          this.answer = Q.ANSWER;
  *          this.level = Q.POWERLEVEL;

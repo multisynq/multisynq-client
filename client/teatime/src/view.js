@@ -13,7 +13,7 @@ function initDEBUG() {
 }
 
 /**
- * Views are the local, non-synchronized part of a Croquet Application.
+ * Views are the local, non-synchronized part of a Multisynq Application.
  * Each device and browser window creates its own independent local view.
  * The view [subscribes]{@link View#subscribe} to events [published]{@link Model#publish}
  * by the synchronized model, so it stays up to date in real time.
@@ -21,11 +21,11 @@ function initDEBUG() {
  * What the view is showing, however, is completely up to the application developer.
  * The view can adapt to the device it's running on and show very different things.
  *
- * **Croquet makes no assumptions about the UI framework you use** - be it plain HTML or Three.js or React or whatever.
- * Croquet only provides the publish/subscribe mechanism to hook into the synchronized model simulation.
+ * **Multisynq makes no assumptions about the UI framework you use** - be it plain HTML or Three.js or React or whatever.
+ * Multisynq only provides the publish/subscribe mechanism to hook into the synchronized model simulation.
  *
- * It's possible for a single view instance to handle all the events, you don't event have to subclass Croquet.View for that.
- * That being said, a common pattern is to make a hierarchy of `Croquet.View` subclasses to mimic your hierarchy of {@link Model} subclasses.
+ * It's possible for a single view instance to handle all the events, you don't event have to subclass Multisynq.View for that.
+ * That being said, a common pattern is to make a hierarchy of `Multisynq.View` subclasses to mimic your hierarchy of {@link Model} subclasses.
  *
  * @public
  */
@@ -78,8 +78,8 @@ class View {
             };
             const logPublishedEvent = data => this.activeSubscription.source === "view" && logEvent(data);
             const logReceivedEvent = data => this.activeSubscription.source === "model" && logEvent(data);
-            logPublishedEvent.__CROQUET__ = true;
-            logReceivedEvent.__CROQUET__ = true;
+            logPublishedEvent.__MULTISYNQ__ = true;
+            logReceivedEvent.__MULTISYNQ__ = true;
             this.subscribe("*", {event: "*", handling: "queued"}, logReceivedEvent);
             this.subscribe("*", {event: "*", handling: "immediate"}, logPublishedEvent);
         }
@@ -134,7 +134,7 @@ class View {
     /**
      * **Publish an event to a scope.**
      *
-     * Events are the main form of communication between models and views in Croquet.
+     * Events are the main form of communication between models and views in Multisynq.
      * Both models and views can publish events, and subscribe to each other's events.
      * Model-to-model and view-to-view subscriptions are possible, too.
      *
@@ -334,7 +334,7 @@ class View {
      * [Model time]{@link View#now} however only advances synchronously on every iteration of the [main loop]{@link Session.join}.
      * Usually `now == externalNow`, but if the model has not caught up yet, then `now < externalNow`.
      *
-     * We call the difference "backlog". If the backlog is too large, Croquet will put an overlay on the scene,
+     * We call the difference "backlog". If the backlog is too large, Multisynq will put an overlay on the scene,
      * and remove it once the model simulation has caught up.
      * The [`"synced"` event]{@link event:synced} is sent when that happens.
      *

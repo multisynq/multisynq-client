@@ -151,7 +151,7 @@ export class Domain {
     hasUserSubcription(subscription) {
         for (const handling of ['immediate', 'queued', 'oncePerFrame', 'oncePerFrameWhileSynced']) {
             for (const handler of subscription[handling]) {
-                if (!handler.unbound.__CROQUET__) {
+                if (!handler.unbound.__MULTISYNQ__) {
                     return true;
                 }
             }
@@ -279,4 +279,4 @@ function removeHandlers(handlers, subscriberId, callback=null) {
     return remaining;
 }
 
-export const viewDomain = globalThis.CROQUETVD = new Domain();
+export const viewDomain = globalThis.MULTISYNQVD = new Domain();

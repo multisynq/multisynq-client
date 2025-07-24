@@ -387,7 +387,7 @@ var QRCode;
 	};
 
 	/**
-	 * (added for Croquet) return the internal canvas holding the QRCode
+	 * (added for Multisynq) return the internal canvas holding the QRCode
 	 */
 	QRCode.prototype.getCanvas = function () {
 		for (let i = 0; i < this._el.children.length; i++) {

@@ -21,7 +21,7 @@ function getRandomString(length) {
         .substring(2, 2 + length);
 }
 
-export class CroquetWebRTCConnection {
+export class MultisynqWebRTCConnection {
     static get name() { return `${App.libName}WebRTCConnection`; }
 
     constructor(registryURL) {

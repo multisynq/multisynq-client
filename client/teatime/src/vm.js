@@ -1,6 +1,6 @@
 import stableStringify from "fast-json-stable-stringify";
 import SeedRandom from "../thirdparty-patched/seedrandom/seedrandom";
-import "../../math/math"; // creates globalThis.CroquetMath
+import "../../math/math"; // creates globalThis.MultisynqMath
 import PriorityQueue from "./priorityQueue";
 import { Stats } from "./_STATS_MODULE_"; // eslint-disable-line import/no-unresolved
 import { App, displayWarning, displayAppError } from "./_HTML_MODULE_"; // eslint-disable-line import/no-unresolved
@@ -33,24 +33,24 @@ export function propertyAccessor(object, property) {
         property.match(/^[a-z_$][a-z0-9_$]*$/i) ? `.${property}` : `["${property}"]`;
 }
 
-/** this shows up as "CroquetWarning" in the console */
-class CroquetWarning extends Error {}
-Object.defineProperty(CroquetWarning.prototype, "name", { value: `${App.libName}Warning` });
+/** this shows up as "MultisynqWarning" in the console */
+class MultisynqWarning extends Error {}
+Object.defineProperty(MultisynqWarning.prototype, "name", { value: `${App.libName}Warning` });
 
 /** patch Math and Date */
 function patchBrowser() {
-    // patch Math.random, and the transcendentals as defined in "@croquet/math"
-    if (!globalThis.CroquetViewMath) {
+    // patch Math.random, and the transcendentals as defined in "@multisynq/math"
+    if (!globalThis.MultisynqViewMath) {
         // make random use CurrentVM
-        globalThis.CroquetMath.random = () => CurrentVM.random();
+        globalThis.MultisynqMath.random = () => CurrentVM.random();
         // save all original Math properties
-        globalThis.CroquetViewMath = {};
+        globalThis.MultisynqViewMath = {};
         for (const [funcName, descriptor] of Object.entries(Object.getOwnPropertyDescriptors(Math))) {
-            globalThis.CroquetViewMath[funcName] = descriptor.value;
+            globalThis.MultisynqViewMath[funcName] = descriptor.value;
         }
-        // we keep the original Math object but replace the methods found in CroquetMath
+        // we keep the original Math object but replace the methods found in MultisynqMath
         // with a dispatch based on being executed in model or view code
-        for (const [funcName, modelFunc] of Object.entries(globalThis.CroquetMath)) {
+        for (const [funcName, modelFunc] of Object.entries(globalThis.MultisynqMath)) {
             const viewFunc = Math[funcName];
             Math[funcName] = modelFunc.length === 1
                 ? arg => CurrentVM ? modelFunc(arg) : viewFunc(arg)
@@ -58,7 +58,7 @@ function patchBrowser() {
         }
     }
     // patch Date.now to return VirtualMachine time if called from Model code
-    if (!globalThis.CroquetViewDate) {
+    if (!globalThis.MultisynqViewDate) {
         // replace the original Date constructor function but return actual Date instances
         const SystemDate = globalThis.Date; // capture in closure
         // warn only once
@@ -66,15 +66,15 @@ function patchBrowser() {
         function modelDateWarning(expr, value) {
             if (!warned) {
                 warned = true;
-                // log CroquetWarning object to give developers a stack trace
-                console.warn(new CroquetWarning(`${expr} used in Model code`));
+                // log MultisynqWarning object to give developers a stack trace
+                console.warn(new MultisynqWarning(`${expr} used in Model code`));
             }
             return value;
         }
         // Date replacement
-        function CroquetDate(a, b, c, d, e, f, g) {
-            // written this way so CroquetDate.length === 7 per spec
-            const calledWithNew = this instanceof CroquetDate; // slightly more efficient than new.target after Babel
+        function MultisynqDate(a, b, c, d, e, f, g) {
+            // written this way so MultisynqDate.length === 7 per spec
+            const calledWithNew = this instanceof MultisynqDate; // slightly more efficient than new.target after Babel
             const args = [a, b, c, d, e, f, g];
             args.length = arguments.length;
             if (CurrentVM) {
@@ -93,14 +93,14 @@ function patchBrowser() {
             return calledWithNew ? instance : "" + instance;
         }
         // implement static properties
-        CroquetDate.prototype = SystemDate.prototype;
-        CroquetDate.UTC = SystemDate.UTC;
-        CroquetDate.now =  () => CurrentVM ? modelDateWarning("Date.now()", CurrentVM.time) : SystemDate.now();
-        CroquetDate.parse = (...args) => CurrentVM ? modelDateWarning("Date.parse()", 0) : SystemDate.parse(...args);
+        MultisynqDate.prototype = SystemDate.prototype;
+        MultisynqDate.UTC = SystemDate.UTC;
+        MultisynqDate.now =  () => CurrentVM ? modelDateWarning("Date.now()", CurrentVM.time) : SystemDate.now();
+        MultisynqDate.parse = (...args) => CurrentVM ? modelDateWarning("Date.parse()", 0) : SystemDate.parse(...args);
         // make original accessible
-        globalThis.CroquetViewDate = SystemDate;
+        globalThis.MultisynqViewDate = SystemDate;
         // switch
-        globalThis.Date = CroquetDate;
+        globalThis.Date = MultisynqDate;
     }
 }
 
@@ -160,7 +160,7 @@ function compileQFunc(source, thisVal, env, selfRef) {
     while (envKeys?.includes(fnVar)) fnVar = '_' + fnVar;
     // now build source for compiler function
     let compilerSrc = '"use strict"\n\n';
-    compilerSrc += '// Croquet QFunc Compiler by Codefrau\n\n';
+    compilerSrc += '// Multisynq QFunc Compiler by Codefrau\n\n';
     compilerSrc += '//////////////// Start Compiler /////////////////\n';
     compilerSrc += 'try { const '; // error on undeclared variables
     // destructure env as constants to prevent accidental writes
@@ -302,7 +302,7 @@ function execInVM(vm, fn) {
     const previousVM = CurrentVM;
     try {
         CurrentVM = vm;
-        globalThis.CROQUETVM = vm;
+        globalThis.MULTISYNQVM = vm;
         fn();
     } finally {
         CurrentVM = previousVM;
@@ -846,7 +846,7 @@ export default class VirtualMachine {
             // execute future or external message
             message.executeOn(this);
             // if we're out of time, bail out
-            if (globalThis.CroquetViewDate.now() >= deadline) return false;
+            if (globalThis.MultisynqViewDate.now() >= deadline) return false;
         }
         // we processed all messages up to newTime
         this.time = newTime;
@@ -2100,7 +2100,7 @@ class VMWriter {
     }
 }
 
-const UNRESOLVED = Symbol("croquet:unresolved");
+const UNRESOLVED = Symbol("multisynq:unresolved");
 
 class VMReader {
     static newOrRecycled(vm) {
@@ -2163,7 +2163,7 @@ class VMReader {
     }
 
     enableBackwardCompatibility(snapshot) {
-        // the Croquet version that created the snapshot
+        // the Multisynq version that created the snapshot
         const version = snapshot?.meta?.sdk;
         if (!version) return;
         const [major, minor, patch, pre] = version.split(/[-.+]/).map(n => +n);

@@ -3,17 +3,17 @@
 // 2. The container to a single app
 // 3. The container to all apps
 
-// The TeaTime framework creates a singleton instance of M and install it to Croquet.Messenger
+// The TeaTime framework creates a singleton instance of M and install it to Multisynq.Messenger
 // To use the Messenger object, the client needs to set the receiver object for invoking the handler for an incoming message:
-//  Croquet.Messenger.setReceiver(this);
+//  Multisynq.Messenger.setReceiver(this);
 
 // where "this" is a view side object that handles incoming messages.
 
 // To listen on an incoming message, the receiver calls:
-//    Croquet.Messenger.on(event<string>, callback<function or method name<string>>);
+//    Multisynq.Messenger.on(event<string>, callback<function or method name<string>>);
 
 // To send a message:
-//    Croquet.Messenger.send(event<string>, data<serializable object>, receipent<window or null>);
+//    Multisynq.Messenger.send(event<string>, data<serializable object>, receipent<window or null>);
 
 // An app can send a message only to the container so the recipient argument will be ignored.
 // The container can send a message to a specific Window by supplying the third argument.
@@ -26,23 +26,23 @@
 // An example on the container side looks like this (the view class or the expander, is an instance of PasteUpView in this example):
 
 //    init() {
-//      Croquet.Messenger.setReceiver(this);
-//      Croquet.Messenger.onC"requestUserInfo", "sendUserInfo");
+//      Multisynq.Messenger.setReceiver(this);
+//      Multisynq.Messenger.onC"requestUserInfo", "sendUserInfo");
 //    }
 //
 //    and aPasteUpView.sendUsernfo looks like:
 //    sendUserInfo(data, source) {
 //       const userInfo = this.model._get("userInfo")[this.viewId];
-//       Croquet.Messenger.send("userInfo", userInfo, source);
+//       Multisynq.Messenger.send("userInfo", userInfo, source);
 //       // where the last argument specifies that this is a directed message
 //    }
 
 // The container needs to be careful what information it sends to an app.
 
-// On the container side, there is a method called setIframeEnumerator, where Croquet, of a future container app, specifies a way to enumerate all relevant iframes.
+// On the container side, there is a method called setIframeEnumerator, where Multisynq, of a future container app, specifies a way to enumerate all relevant iframes.
 
 // For a cursor movement, an app may do:
-// Croquet.Messenger.send("pointerPosition", {x, y});
+// Multisynq.Messenger.send("pointerPosition", {x, y});
 
 // The container side PasteUpView would have a subscriber:
 

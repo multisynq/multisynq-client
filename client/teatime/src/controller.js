@@ -8,7 +8,7 @@ import WordArray from "crypto-js/lib-typedarrays";
 import HmacSHA256 from "crypto-js/hmac-sha256";
 import pako from "pako"; // gzip-aware compressor
 import { OfflineSocket } from "./offline";
-import { CroquetWebRTCConnection } from "./webrtc";
+import { MultisynqWebRTCConnection } from "./webrtc";
 import UploadWorkerFactory from './upload.worker.js';
 
 // the esbuild config will replace the lines below with imports in the case of a Node.js build
@@ -218,7 +218,7 @@ let UploadJobs = 0;
 
 const Controllers = new Set();
 
-// for debugging: make controller accessible as CROQUETVD.controller
+// for debugging: make controller accessible as MULTISYNQVD.controller
 Object.defineProperty(viewDomain, "controller", {
     get() { return this.controllers.values().next().value; }
 });
@@ -260,7 +260,7 @@ export default class Controller {
     }
 
     reset() {
-        if (globalThis.CROQUETVM === this.vm) delete globalThis.CROQUETVM;
+        if (globalThis.MULTISYNQVM === this.vm) delete globalThis.MULTISYNQVM;
         /** @type {VirtualMachine} */
         this.vm = null;
         /** @type {Session} the session object as returned from Session.join, set in session.js. Not to be used here but only so that View.session can find it. Needs redesign. */
@@ -361,7 +361,7 @@ export default class Controller {
     /** @type {String} the persistent id (same for all replicas with same options across app versions) */
     get persistentId() { return this.sessionSpec.persistentId; }
 
-    /** @type {String} identifies Croquet version and app code */
+    /** @type {String} identifies Multisynq version and app code */
     get versionId() { return this.sessionSpec.codeHash; }
 
     /** @type {Number} the reflector time extrapolated beyond last received tick */
@@ -650,7 +650,7 @@ export default class Controller {
             options: this.sessionSpec.options,
             time,
             seq,
-            date: (new globalThis.CroquetViewDate()).toISOString(), // mar 2022: this is now running in Model code
+            date: (new globalThis.MultisynqViewDate()).toISOString(), // mar 2022: this is now running in Model code
             host: NODE ? "localhost" : window.location.hostname,
             sdk: MULTISYNQ_VERSION,
         };
@@ -943,7 +943,7 @@ export default class Controller {
         // we could deserialize the snapshots and compare the resulting VMs,
         // but for now we just compare the JSON, which is simpler and faster
         let differences = 0;
-        diffJSON(snapshots[0], snapshots[1], "CROQUETVM");
+        diffJSON(snapshots[0], snapshots[1], "MULTISYNQVM");
         if (!differences) console.log("... but diverged snapshots are identical?!");
         else console.log(`Total ${differences} differences between diverged snapshots:`, snapshots.slice(0, 2));
         debugger; // eslint-disable-line no-debugger
@@ -1261,7 +1261,7 @@ export default class Controller {
             const bytesIn = Stats.networkTraffic.audit_reflector_in || 0;
             const bytesOut = Stats.networkTraffic.audit_reflector_out || 0;
             Stats.resetAuditStats();
-            const { clientId } = this.connection.socket; // random id assigned by CroquetWebRTCConnection
+            const { clientId } = this.connection.socket; // random id assigned by MultisynqWebRTCConnection
             // having gathered the stats we need, schedule the actual reporting outside
             // the simulation
             queueMicrotask(() => {
@@ -1494,7 +1494,7 @@ export default class Controller {
                 delete this.fastForwardHandler;
                 if (success) {
                     if (DEBUG.session) console.log(this.id, `fast-forwarded to ${Math.round(this.vm.time)}`);
-                    if (this.vm.diverged) App.showMessage(`${App.libName}: session had diverged. Try CROQUETVM.debugDiverged()`, { level: "warning", only: "once" });
+                    if (this.vm.diverged) App.showMessage(`${App.libName}: session had diverged. Try MULTISYNQVM.debugDiverged()`, { level: "warning", only: "once" });
                     // iff fast-forward was successful, trigger return from establishSession().
                     // otherwise, in due course we'll reconnect and try again.  it can keep waiting.
                     this.sessionSpec.sessionJoined();
@@ -1558,7 +1558,7 @@ export default class Controller {
                 // information the reflector wants us to know
                 // for the moment just show it
                 const { msg, options } = args;
-                const prefix = DEPIN ? "Multisynq Synchronizer" : "Croquet Reflector";
+                const prefix = DEPIN ? "Multisynq Synchronizer" : "Multisynq Reflector";
                 App.showMessage(`${prefix}: ${msg}`, options);
                 return;
             }
@@ -2597,7 +2597,7 @@ class Connection {
             const { persistentId, appId, developerId } = this.controller.sessionSpec;
             // sept 2024: now always include appId and developerId on connection.
             // @@ should we sanity-check the appId?
-            socket = new CroquetWebRTCConnection(`${DEPIN_API}/clients/connect?session=${sessionId}&persist=${persistentId}&app=${encodeURIComponent(appId)}&developer=${developerId}${synchRequest}`);
+            socket = new MultisynqWebRTCConnection(`${DEPIN_API}/clients/connect?session=${sessionId}&persist=${persistentId}&app=${encodeURIComponent(appId)}&developer=${developerId}${synchRequest}`);
             socket.isConnected = () => socket.dataChannel?.readyState === 'open';
             socket.onconnected = readyForJoin; // see below
         } else {

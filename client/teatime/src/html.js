@@ -16,43 +16,43 @@ const BUTTON_OFFSET = TOUCH ? 0 : 15; // extra % from the right
 const CONTENT_MARGIN = 2; // px
 const TRANSITION_TIME = 0.3; // seconds
 
-// add style for the standard widgets that can appear on a Croquet page
+// add style for the standard widgets that can appear on a Multisynq page
 let addedWidgetStyle = false;
 function addWidgetStyle() {
     if (addedWidgetStyle) return;
     addedWidgetStyle = true;
     const widgetCSS = `
-        #croquet_dock { position: fixed; z-index: 2; border: 3px solid white; bottom: 6px; left: 6px; width: 36px; height: 36px; box-sizing: border-box; background: white; opacity: 0.4; transition: all ${TRANSITION_TIME}s ease; }
-        #croquet_dock.active { opacity: 0.95; border-radius: 12px; }
-        #croquet_dock.debug { width: 84px; }
-        #croquet_dock_bar { position: absolute; border: 3px solid white; width: 100%; height: 30px; box-sizing: border-box; background: white; }
+        #multisynq_dock { position: fixed; z-index: 2; border: 3px solid white; bottom: 6px; left: 6px; width: 36px; height: 36px; box-sizing: border-box; background: white; opacity: 0.4; transition: all ${TRANSITION_TIME}s ease; }
+        #multisynq_dock.active { opacity: 0.95; border-radius: 12px; }
+        #multisynq_dock.debug { width: 84px; }
+        #multisynq_dock_bar { position: absolute; border: 3px solid white; width: 100%; height: 30px; box-sizing: border-box; background: white; }
 
-        #croquet_badge { position: absolute; width: 72px; height: 24px; top: 50%; transform: translate(0px, -50%); cursor: none; }
-        #croquet_dock.active #croquet_badge { left: 2%; }
-        #croquet_dock:not(.debug) #croquet_badge { display: none; }
+        #multisynq_badge { position: absolute; width: 72px; height: 24px; top: 50%; transform: translate(0px, -50%); cursor: none; }
+        #multisynq_dock.active #multisynq_badge { left: 2%; }
+        #multisynq_dock:not(.debug) #multisynq_badge { display: none; }
 
-        .croquet_dock_button { position: absolute; width: ${BUTTON_WIDTH}%; height: 90%; top: 50%; transform: translate(0px, -50%); border-radius: 20%; }
-        .croquet_dock_button:focus { outline: 0; }
-        .croquet_dock_button canvas { position: absolute; width: 100%; height: 100%; top: 0px; left: 0px; }
-        #croquet_dock:not(.active) .croquet_dock_button { display: none; }
-        #croquet_dock_left { right: ${BUTTON_RIGHT + BUTTON_OFFSET + BUTTON_WIDTH + BUTTON_SEPARATION}% }
-        #croquet_dock:not(.debug) #croquet_dock_left { display: none; }
-        #croquet_dock_right { right: ${BUTTON_RIGHT + BUTTON_OFFSET}%; }
-        #croquet_dock:not(.debug) #croquet_dock_right { display: none; }
-        #croquet_dock_pin { right: ${BUTTON_RIGHT}%; }
-        #croquet_dock_pin.pinned { background: #cce6ff; }
+        .multisynq_dock_button { position: absolute; width: ${BUTTON_WIDTH}%; height: 90%; top: 50%; transform: translate(0px, -50%); border-radius: 20%; }
+        .multisynq_dock_button:focus { outline: 0; }
+        .multisynq_dock_button canvas { position: absolute; width: 100%; height: 100%; top: 0px; left: 0px; }
+        #multisynq_dock:not(.active) .multisynq_dock_button { display: none; }
+        #multisynq_dock_left { right: ${BUTTON_RIGHT + BUTTON_OFFSET + BUTTON_WIDTH + BUTTON_SEPARATION}% }
+        #multisynq_dock:not(.debug) #multisynq_dock_left { display: none; }
+        #multisynq_dock_right { right: ${BUTTON_RIGHT + BUTTON_OFFSET}%; }
+        #multisynq_dock:not(.debug) #multisynq_dock_right { display: none; }
+        #multisynq_dock_pin { right: ${BUTTON_RIGHT}%; }
+        #multisynq_dock_pin.pinned { background: #cce6ff; }
 
-        #croquet_dock_content { position: absolute; left: ${CONTENT_MARGIN}px; top: ${CONTENT_MARGIN}px; right: ${CONTENT_MARGIN}px; bottom: ${CONTENT_MARGIN}px; background: white; overflow: hidden; }
-        #croquet_dock.debug:not(.active) #croquet_dock_content { display: none; }
-        #croquet_dock.debug:not(.active) #croquet_dock_content div { display: none; }
+        #multisynq_dock_content { position: absolute; left: ${CONTENT_MARGIN}px; top: ${CONTENT_MARGIN}px; right: ${CONTENT_MARGIN}px; bottom: ${CONTENT_MARGIN}px; background: white; overflow: hidden; }
+        #multisynq_dock.debug:not(.active) #multisynq_dock_content { display: none; }
+        #multisynq_dock.debug:not(.active) #multisynq_dock_content div { display: none; }
 
-        #croquet_qrcode { position: absolute; width: 100%; height: 100%;box-sizing: border-box; cursor: crosshair; }
-        #croquet_dock.active #croquet_qrcode { border: 6px solid white; }
-        #croquet_dock.debug #croquet_qrcode:not(.active) { display: none; }
-        #croquet_qrcode canvas { image-rendering: pixelated; }
+        #multisynq_qrcode { position: absolute; width: 100%; height: 100%;box-sizing: border-box; cursor: crosshair; }
+        #multisynq_dock.active #multisynq_qrcode { border: 6px solid white; }
+        #multisynq_dock.debug #multisynq_qrcode:not(.active) { display: none; }
+        #multisynq_qrcode canvas { image-rendering: pixelated; }
 
-        #croquet_stats { position: absolute; width: 70%; height: 90%; left: 15%; top: 5%; opacity: 0.8; font-family: sans-serif; }
-        #croquet_stats:not(.active) { display: none; }
+        #multisynq_stats { position: absolute; width: 70%; height: 90%; left: 15%; top: 5%; opacity: 0.8; font-family: sans-serif; }
+        #multisynq_stats:not(.active) { display: none; }
 `;
     const widgetStyle = document.createElement("style");
     widgetStyle.innerHTML = widgetCSS;
@@ -70,7 +70,7 @@ function addSpinnerStyle() {
     // make accurate judgements about whether an iframed app is in or out of view.
     const spinnerCSS = `
         ${IFRAMED ? "body { min-height: 100vh }" : ""}
-        #croquet_spinnerOverlay {
+        #multisynq_spinnerOverlay {
             z-index: 1000;
             position: fixed;
             left: 0;
@@ -85,19 +85,19 @@ function addSpinnerStyle() {
             transition: opacity 1.0s ease-out;
         }
         /* https://github.com/lukehaas/css-loaders */
-        @keyframes croquet_dots {
+        @keyframes multisynq_dots {
             0%, 80%, 100% { box-shadow: 0 2.5em 0 -1.3em; }
             40% { box-shadow: 0 2.5em 0 0; }
         }
-        #croquet_loader,
-        #croquet_loader::before,
-        #croquet_loader::after {
+        #multisynq_loader,
+        #multisynq_loader::before,
+        #multisynq_loader::after {
           border-radius: 50%;
           width: 2.5em;
           height: 2.5em;
-          animation: croquet_dots 1.8s infinite ease-in-out;
+          animation: multisynq_dots 1.8s infinite ease-in-out;
         }
-        #croquet_loader {
+        #multisynq_loader {
           color: #fff;
           font-size: 10px;
           margin: 80px auto;
@@ -105,22 +105,22 @@ function addSpinnerStyle() {
           text-indent: -9999em;
           animation-delay: -0.16s;
         }
-        #croquet_loader::before,
-        #croquet_loader::after {
+        #multisynq_loader::before,
+        #multisynq_loader::after {
           content: '';
           position: absolute;
           top: 0;
         }
-        #croquet_loader::before { left: -3.5em; animation-delay: -0.32s; }
-        #croquet_loader::after { left: 3.5em; }
-        #croquet_spinnerOverlay.croquet_error>*,
-        #croquet_spinnerOverlay.croquet_error>*::before,
-        #croquet_spinnerOverlay.croquet_error>*::after {
+        #multisynq_loader::before { left: -3.5em; animation-delay: -0.32s; }
+        #multisynq_loader::after { left: 3.5em; }
+        #multisynq_spinnerOverlay.multisynq_error>*,
+        #multisynq_spinnerOverlay.multisynq_error>*::before,
+        #multisynq_spinnerOverlay.multisynq_error>*::after {
             color: #f00;
         }
-        #croquet_spinnerOverlay.croquet_fatal>*,
-        #croquet_spinnerOverlay.croquet_fatal>*::before,
-        #croquet_spinnerOverlay.croquet_fatal>*::after {
+        #multisynq_spinnerOverlay.multisynq_fatal>*,
+        #multisynq_spinnerOverlay.multisynq_fatal>*::before,
+        #multisynq_spinnerOverlay.multisynq_fatal>*::after {
             color: #f00;
             box-shadow: 0 2.5em 0 0 !important;
             animation: none !important;
@@ -243,7 +243,7 @@ export function displayStatus(msg, options={}) {
 
 export function displayAppError(where, error, level = "error") {
     console.error(`Error during ${where}`, error);
-    const userStack = (error.stack || '').split("\n").filter(l => !l.match(/croquet-.*\.min.js/)).join('\n');
+    const userStack = (error.stack || '').split("\n").filter(l => !l.match(/multisynq-.*\.min.js/)).join('\n');
     App.showMessage(`Error during ${where}: ${error.message}\n\n${userStack}`,  {
         level,
         duration: level === "error" ? 10000 : undefined,
@@ -270,7 +270,7 @@ function displayToast(msg, options) {
     if (parentDef instanceof Element && parentDef !== document.body) {
         // toastify needs an id, not an element.  if the element has no id, give it one.
         selector = parentDef.id;
-        if (!selector) parentDef.id = selector = '_croquetToastParent';
+        if (!selector) parentDef.id = selector = '_multisynqToastParent';
     } else if (typeof parentDef === 'string') selector = parentDef;
     // else fall through with no selector (so body will be used as parent)
 
@@ -305,9 +305,9 @@ let localStorage;
 try {
     // check if we're allowed to use localStorage
     localStorage = window.localStorage;
-    localStorage['croquet-debug-persist-allowed'] = "true";
-    if (localStorage['croquet-debug-persist-allowed'] !== "true") throw Error("localStorage not persisted");
-    delete localStorage['croquet-debug-persist-allowed'];
+    localStorage['multisynq-debug-persist-allowed'] = "true";
+    if (localStorage['multisynq-debug-persist-allowed'] !== "true") throw Error("localStorage not persisted");
+    delete localStorage['multisynq-debug-persist-allowed'];
 } catch (err) {
     // if not, fake it
     console.warn('localStorage not allowed');
@@ -316,10 +316,10 @@ try {
 
 const dockState = {
     // localStorage is per-host, but we also want per-app
-    get pinned() { return localStorage[window.location.pathname + '/croquet-debug-ui-pinned'] === "true"; },
-    set pinned(bool) { localStorage[window.location.pathname + '/croquet-debug-ui-pinned'] = !!bool; },
-    get activePage() { return localStorage[window.location.pathname + '/croquet-debug-ui-activePage']; },
-    set activePage(id) { localStorage[window.location.pathname + '/croquet-debug-ui-activePage'] = id; },
+    get pinned() { return localStorage[window.location.pathname + '/multisynq-debug-ui-pinned'] === "true"; },
+    set pinned(bool) { localStorage[window.location.pathname + '/multisynq-debug-ui-pinned'] = !!bool; },
+    get activePage() { return localStorage[window.location.pathname + '/multisynq-debug-ui-activePage']; },
+    set activePage(id) { localStorage[window.location.pathname + '/multisynq-debug-ui-activePage'] = id; },
 };
 
 const smotherEvent = evt => {
@@ -336,7 +336,7 @@ function makeWidgetDock(options = {}) {
 
     const debug = options.debug || urlOptions.debug;
 
-    const oldDockDiv = document.getElementById('croquet_dock');
+    const oldDockDiv = document.getElementById('multisynq_dock');
     if (oldDockDiv) oldDockDiv.parentElement.removeChild(oldDockDiv);
 
     const dockParent = findElement(App.root, () => document.body);
@@ -345,25 +345,25 @@ function makeWidgetDock(options = {}) {
     addWidgetStyle();
 
     const dockDiv = document.createElement('div');
-    dockDiv.id = 'croquet_dock';
+    dockDiv.id = 'multisynq_dock';
     if (debug) dockDiv.classList.add("debug");
     if (IFRAMED && options.iframe === false) dockDiv.style.display = "none";
     dockParent.appendChild(dockDiv);
 
     const barDiv = document.createElement('div');
-    barDiv.id = 'croquet_dock_bar';
+    barDiv.id = 'multisynq_dock_bar';
     dockDiv.appendChild(barDiv);
 
     let badgeDiv;
     if (options.badge !== false) {
         badgeDiv = document.createElement('div');
-        badgeDiv.id = 'croquet_badge';
+        badgeDiv.id = 'multisynq_badge';
         barDiv.appendChild(badgeDiv);
         App.badge = badgeDiv;
     }
 
     const contentDiv = document.createElement('div');
-    contentDiv.id = 'croquet_dock_content';
+    contentDiv.id = 'multisynq_dock_content';
     dockDiv.appendChild(contentDiv);
 
     const dockPageIds = []; // an ordered collection of available page (i.e., element) ids
@@ -373,7 +373,7 @@ function makeWidgetDock(options = {}) {
         const url = App.sessionURL;
         if (url) {
             qrDiv = document.createElement('div');
-            qrDiv.id = 'croquet_qrcode';
+            qrDiv.id = 'multisynq_qrcode';
             contentDiv.appendChild(qrDiv);
             dockPageIds.push(qrDiv.id);
             App.qrcode = qrDiv;
@@ -384,7 +384,7 @@ function makeWidgetDock(options = {}) {
     let statsDiv;
     if (options.stats !== false) {
         statsDiv = document.createElement('div');
-        statsDiv.id = 'croquet_stats';
+        statsDiv.id = 'multisynq_stats';
         contentDiv.appendChild(statsDiv);
         dockPageIds.push(statsDiv.id);
         App.stats = statsDiv;
@@ -416,15 +416,15 @@ function makeWidgetDock(options = {}) {
         }
 
         if (dockPageIds.length > 1) {
-            barDiv.appendChild(makeButton('<', 'croquet_dock_left', () => shiftPage(-1)));
-            barDiv.appendChild(makeButton('>', 'croquet_dock_right', () => shiftPage(1)));
+            barDiv.appendChild(makeButton('<', 'multisynq_dock_left', () => shiftPage(-1)));
+            barDiv.appendChild(makeButton('>', 'multisynq_dock_right', () => shiftPage(1)));
         }
 
         shiftPage(0); // set up a starting page (or re-select, if already set)
     }
 
     if (!TOUCH && !options.alwaysPinned) {
-        const pinButton = makeButton('📌', 'croquet_dock_pin', () => {
+        const pinButton = makeButton('📌', 'multisynq_dock_pin', () => {
             dockState.pinned = !dockState.pinned;
             setPinState();
             });
@@ -523,7 +523,7 @@ function makeButton(text, id, fn) {
 
     const button = document.createElement('button');
     button.id = id;
-    button.className = 'croquet_dock_button';
+    button.className = 'multisynq_dock_button';
     const trigger = evt => {
         evt.preventDefault();
         evt.stopPropagation();
@@ -607,7 +607,7 @@ function displayBadgeIfNeeded(sessionId) {
 }
 
 function toggleDebug() {
-    const dockDiv = document.getElementById('croquet_dock');
+    const dockDiv = document.getElementById('multisynq_dock');
     if (dockDiv) dockDiv.classList.toggle("debug");
 }
 
@@ -673,8 +673,8 @@ function displaySpinner(enabled) {
             parent.appendChild(spinnerOverlay);
 
             spinnerOverlay.style.opacity = 0.9; // animate into view
-            if (spinnerEnabled === "error") spinnerOverlay.className = "croquet_error";
-            else if (spinnerEnabled === "fatal") spinnerOverlay.className = "croquet_fatal";
+            if (spinnerEnabled === "error") spinnerOverlay.className = "multisynq_error";
+            else if (spinnerEnabled === "fatal") spinnerOverlay.className = "multisynq_fatal";
             else spinnerOverlay.className = "";
         }, 500);
     } else {
@@ -698,10 +698,10 @@ function makeSpinner() {
     addSpinnerStyle();
 
     const overlay = document.createElement("div");
-    overlay.id = "croquet_spinnerOverlay";
+    overlay.id = "multisynq_spinnerOverlay";
 
     const spinner = document.createElement("div");
-    spinner.id = "croquet_loader";
+    spinner.id = "multisynq_loader";
     spinner.innerText = "Catching up...";
 
     overlay.appendChild(spinner);
@@ -825,16 +825,16 @@ export const App = {
     },
 
     // this is also used in prerelease.js
-    isCroquetHost(hostname) {
-        return hostname.endsWith("croquet.io")
+    isMultisynqHost(hostname) {
+        return hostname.endsWith("multisynq.io")
             || ["localhost", "127.0.0.1", "[::1]"].includes(hostname)
             || hostname.endsWith("ngrok.io");
     },
 
-    // sanitized session URL (always without @user:password and #hash, and without query if not same-origin as croquet.io)
+    // sanitized session URL (always without @user:password and #hash, and without query if not same-origin as multisynq.io)
     referrerURL() {
         const url = new URL(App.sessionURL);
-        const sameOrigin = this.isCroquetHost(url.hostname);
+        const sameOrigin = this.isMultisynqHost(url.hostname);
         // can't use url.origin because Firefox answers "null" for file:// URLs
         return `${url.protocol}//${url.host}${url.pathname}${sameOrigin ? url.search : ""}`;
     },

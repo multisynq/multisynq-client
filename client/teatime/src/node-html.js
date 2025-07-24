@@ -21,7 +21,7 @@ export function displayStatus(msg, options={}) {
 
 export function displayAppError(where, error, level = "error") {
     console.error(`Error during ${where}`, error);
-    const userStack = (error.stack || '').split("\n").filter(l => !l.match(/croquet-.*\.min.js/)).join('\n');
+    const userStack = (error.stack || '').split("\n").filter(l => !l.match(/multisynq-.*\.min.js/)).join('\n');
     App.showMessage(`Error during ${where}: ${error.message}\n\n${userStack}`,  {
         level,
         duration: level === "error" ? 10000 : undefined,
@@ -74,13 +74,13 @@ export const App = {
     },
 
     // this is also used in prerelease.js [or is it?]
-    isCroquetHost(hostname) {
-        return hostname.endsWith("croquet.io")
+    isMultisynqHost(hostname) {
+        return hostname.endsWith("multisynq.io")
             || ["localhost", "127.0.0.1", "[::1]"].includes(hostname)
             || hostname.endsWith("ngrok.io");
     },
 
-    // sanitized session URL (always without @user:password and #hash, and without query if not same-origin as croquet.io)
+    // sanitized session URL (always without @user:password and #hash, and without query if not same-origin as multisynq.io)
     referrerURL() {
         return "http://localhost/node.html";
     },

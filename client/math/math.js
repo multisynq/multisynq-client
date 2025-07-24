@@ -26,16 +26,16 @@ import sinh from "@stdlib/math/base/special/sinh";
 import tan from "@stdlib/math/base/special/tan";
 import tanh from "@stdlib/math/base/special/tanh";
 
-if (typeof globalThis.CroquetMath === "undefined") globalThis.CroquetMath = {};
+if (typeof globalThis.MultisynqMath === "undefined") globalThis.MultisynqMath = {};
 
-Object.assign(globalThis.CroquetMath, { acos, acosh, asin, asinh, atan, atanh, atan2, cbrt, cos, cosh, exp, expm1, log, log1p, log10, log2, sin, sinh, tan, tanh });
+Object.assign(globalThis.MultisynqMath, { acos, acosh, asin, asinh, atan, atanh, atan2, cbrt, cos, cosh, exp, expm1, log, log1p, log10, log2, sin, sinh, tan, tanh });
 
 // workaround for iOS Safari bug giving inconsistent results for stdlib's pow()
-//globalThis.CroquetMath.pow = require("@stdlib/math/base/special/pow");
+//globalThis.MultisynqMath.pow = require("@stdlib/math/base/special/pow");
 const mathPow = Math.pow; // the "native" method
 function isInfinite(x) { return x === Infinity || x === -Infinity; }
 function isInteger(x) { return Number.isInteger(x); }
-globalThis.CroquetMath.pow = (x, y) => {
+globalThis.MultisynqMath.pow = (x, y) => {
     if (isNaN(x) || isNaN(y)) return NaN;
     if (isInfinite(x) || isInfinite(y)) return mathPow(x, y);
     if (x === 0 || y === 0) return mathPow(x, y);
@@ -57,10 +57,7 @@ globalThis.CroquetMath.pow = (x, y) => {
         x *= -1;
         signResult = mathPow(-1, y);
     }
-    const absPow = globalThis.CroquetMath.exp(globalThis.CroquetMath.log(x) * y);
+    const absPow = globalThis.MultisynqMath.exp(globalThis.MultisynqMath.log(x) * y);
     return absPow * signResult;
     };
 
-// if someone can figure out how to make this work properly with exports
-// then please change the import in vm.js to the proper
-// import * as CroquetMath from "../math";

@@ -28,7 +28,7 @@ export { Messenger } from "./src/_MESSENGER_MODULE_"; // eslint-disable-line imp
  * it to the argument in this event, e.g. to associate the view side with an avatar on the model side.
  *
  * @example
- * class MyModel extends Croquet.Model {
+ * class MyModel extends Multisynq.Model {
  *     init() {
  *         this.userData = {};
  *         this.subscribe(this.sessionId, "view-join", this.addUser);
@@ -45,7 +45,7 @@ export { Messenger } from "./src/_MESSENGER_MODULE_"; // eslint-disable-line imp
  *     }
  * }
  * MyModel.register("MyModel");
- * class MyView extends Croquet.View {
+ * class MyView extends Multisynq.View {
  *     constructor(model) {
  *         super(model);
  *         for (const viewId of Object.keys(model.userData)) this.userAdded(viewId);
@@ -73,7 +73,7 @@ export { Messenger } from "./src/_MESSENGER_MODULE_"; // eslint-disable-line imp
  *
  * This event will be published when a view tab is closed, or is disconnected due
  * to network interruption or inactivity.  A view is deemed to be inactive if
- * 10 seconds pass without an execution of the Croquet [main loop]{@link Session.join};
+ * 10 seconds pass without an execution of the Multisynq [main loop]{@link Session.join};
  * this will happen if, for example, the browser tab is hidden.  As soon as the tab becomes
  * active again the main loop resumes, and the session will reconnect, causing
  * a [`"view-join"` event]{@link event:view-join} to be published.  The `viewId`
@@ -112,29 +112,29 @@ export { Messenger } from "./src/_MESSENGER_MODULE_"; // eslint-disable-line imp
  *
  * The overlay is structured as
  * ```html
- * <div id="croquet_spinnerOverlay">
- *     <div id="croquet_loader"></div>
+ * <div id="multisynq_spinnerOverlay">
+ *     <div id="multisynq_loader"></div>
  * </div>
  * ```
  * so you can customize the appearance via CSS using
  * ```css
- * #croquet_spinnerOverlay { ... }
- * #croquet_loader:before { ... }
- * #croquet_loader { ... }
- * #croquet_loader:after { ... }
+ * #multisynq_spinnerOverlay { ... }
+ * #multisynq_loader:before { ... }
+ * #multisynq_loader { ... }
+ * #multisynq_loader:after { ... }
  * ```
  * where the _overlay_ is the black background and the _loader_ with its `:before` and `:after` elements is the three animating dots.
  *
  * The overlay `<div>` is added to the document’s `<body>` by default.
  * You can specify a different parent element by its `id` string or DOM element:
  * ```js
- * Croquet.App.root = element;   // DOM element or id string
+ * Multisynq.App.root = element;   // DOM element or id string
  * ```
  * **Replacing the default overlay**
  *
  * To disable the overlay completely set the _App_ root to `false`.
  * ```js
- * Croquet.App.root = false;
+ * Multisynq.App.root = false;
  * ```
  * To show your own overlay, handle the `"synced"` event.
  *

@@ -21,7 +21,7 @@ let SECRET = Symbol("SECRET");
 const SuperInitNotCalled = new WeakSet();
 
 /**
- * Models are synchronized objects in Croquet.
+ * Models are synchronized objects in Multisynq.
  *
  * They are automatically kept in sync for each user in the same [session]{@link Session.join}.
  * Models receive input by [subscribing]{@link Model#subscribe} to events published in a {@link View}.
@@ -38,7 +38,7 @@ const SuperInitNotCalled = new WeakSet();
  * ```
  * To __initialize__ an instance, override [init()]{@link Model#init}, for example:
  * ```
- * class FooModel extends Croquet.Model {
+ * class FooModel extends Multisynq.Model {
  *     init(options={}) {
  *         this.answer = options.answer || 42;
  *     }
@@ -127,7 +127,7 @@ class Model {
     }
 
     /**
-     * __Registers this model subclass with Croquet__
+     * __Registers this model subclass with Multisynq__
      *
      * It is necessary to register all Model subclasses so the serializer can recreate their instances from a snapshot.
      * Since source code minification can change the actual class name, you have to pass a `classId` explicitly.
@@ -138,7 +138,7 @@ class Model {
      *
      * **Important**: for the hashing to work reliably across browsers, be sure to specify `charset="utf-8"` for your `<html>` or all `<script>` tags.
      * @example
-     * class MyModel extends Croquet.Model {
+     * class MyModel extends Multisynq.Model {
      *   ...
      * }
      * MyModel.register("MyModel")
@@ -148,7 +148,7 @@ class Model {
     static register(classId) {
         if (!classId) {
             classId = this.name;
-            console.warn(`Deprecation warning: ${this.name}.register(classId) called without classId. See https://croquet.io/docs/croquet/Model.html#.register`);
+            console.warn(`Deprecation warning: ${this.name}.register(classId) called without classId. See https://multisynq.io/docs/multisynq/Model.html#.register`);
         }
         resetReadersAndWriters();
         addClassHash(this, classId);
@@ -210,7 +210,7 @@ class Model {
     /**
      * __Static declaration of how to serialize non-model classes.__
      *
-     * The Croquet snapshot mechanism knows about {@link Model} subclasses, as well as many JS built-in types (see below),
+     * The Multisynq snapshot mechanism knows about {@link Model} subclasses, as well as many JS built-in types (see below),
      * it handles circular references, and it works recursively by converting all non-JSON types to JSON.
      *
      * If you want to store instances of non-model classes in your model, override this method.
@@ -255,10 +255,10 @@ class Model {
      *    either wrap the source and function in a custom type (where `read` would compile the source saved by `write`),
      *    or store the source in a regular property, the function in a dollar property,
      *    and have an accessor that compiles the function lazily when needed.
-     *    (see the source of [croquet.io/live]{@link https://croquet.io/live/} for a simple live-coding example)
+     *    (see the source of [multisynq.io/live]{@link https://multisynq.io/live/} for a simple live-coding example)
      *
      * @example <caption>To use the default serializer just declare the class:</caption>
-     * class MyModel extends Croquet.Model {
+     * class MyModel extends Multisynq.Model {
      *   static types() {
      *     return {
      *       "SomeUniqueName": MyNonModelClass,
@@ -269,7 +269,7 @@ class Model {
      * }
      *
      * @example <caption>To define your own serializer, declare read and write functions:</caption>
-     * class MyModel extends Croquet.Model {
+     * class MyModel extends Multisynq.Model {
      *   static types() {
      *     return {
      *      "SomeUniqueName": {
@@ -371,7 +371,7 @@ class Model {
      * or start a [future]{@link Model#future} message chain.
      *
      * If you pass `{options:...}` to [Session.join]{@link Session.join}, these will be passed to your root model's `init()`.
-     * Note that `options` affect the session's `persistentId` – in most cases, using [Croquet.Constants]{@link Constants}
+     * Note that `options` affect the session's `persistentId` – in most cases, using [Multisynq.Constants]{@link Constants}
      * is a better choice to customize what happens in `init()`.
      *
      * If you called [persistSession]{@link Model#persistSession} in a previous session (same name, same options, different code base),
@@ -428,7 +428,7 @@ class Model {
     /**
      * **Publish an event to a scope.**
      *
-     * Events are the main form of communication between models and views in Croquet.
+     * Events are the main form of communication between models and views in Multisynq.
      * Both models and views can publish events, and subscribe to each other's events.
      * Model-to-model and view-to-view subscriptions are possible, too.
      *
@@ -489,7 +489,7 @@ class Model {
      * this.subscribe("something", "changed", this.update);
      * this.subscribe(this.id, "moved", this.handleMove);
      * @example
-     * class MyModel extends Croquet.Model {
+     * class MyModel extends Multisynq.Model {
      *   init() {
      *     this.subscribe(this.id, "moved", this.handleMove);
      *   }
@@ -498,7 +498,7 @@ class Model {
      *     this.y = y;
      *   }
      * }
-     * class MyView extends Croquet.View {
+     * class MyView extends Multisynq.View {
      *   constructor(model) {
      *     this.modelId = model.id;
      *   }
@@ -658,9 +658,9 @@ class Model {
     /**
      * **The model's current time**
      *
-     * Time is discreet in Croquet, meaning it advances in steps.
+     * Time is discreet in Multisynq, meaning it advances in steps.
      * Every user's device performs the exact same computation at the exact same virtual time.
-     * This is what allows Croquet to do perfectly synchronized computation.
+     * This is what allows Multisynq to do perfectly synchronized computation.
      *
      * Every [event handler]{@link Model#subscribe} and [future message]{@link Model#future}
      * is run at a precisely defined moment in virtual model time, and time stands still while this execution is happening.
@@ -685,12 +685,12 @@ class Model {
      * Note: The instance of your root Model class is automatically made well-known as `"modelRoot"`
      * and passed to the [constructor]{@link View} of your root View during {@link Session.join}.
      * @example
-     * class FooManager extends Croquet.Model {
+     * class FooManager extends Multisynq.Model {
      *   init() {
      *     this.beWellKnownAs("UberFoo");
      *   }
      * }
-     * class Underlings extends Croquet.Model {
+     * class Underlings extends Multisynq.Model {
      *   reportToManager(something) {
      *     this.wellKnownModel("UberFoo").report(something);
      *   }
@@ -841,14 +841,14 @@ class Model {
      * version of your [init]{@link Model#init} can decide what to do.
      *
      * **Warning** Do NOT use `JSON.stringify` because the result is not guaranteed to have the same ordering of keys
-     * everywhere. Instead, store the JSON data directly and let Croquet apply its stable stringification.
+     * everywhere. Instead, store the JSON data directly and let Multisynq apply its stable stringification.
      *
      * Also you must only call persistSession() from your [root model]{@link Model#wellKnownModel}.
      * If there are submodels, your collectDataFunc should collect data from all submodels.
      * Similarly, only your root model's `init` will receive that persisted data.
      * It should recreate submodels as necessary.
      *
-     * Croquet will not interpret this data in any way (e.g. not even the `version` property in the example below).
+     * Multisynq will not interpret this data in any way (e.g. not even the `version` property in the example below).
      * It is stringified, encrypted, and stored.
      *
      * @example
@@ -887,7 +887,7 @@ class Model {
         return `${className}#${this.id}`;
     }
 }
-// Model.register("Croquet.Model");
+// Model.register("Multisynq.Model");
 // registered at end of this file without hashing or logging
 
 /// MODEL CLASS LOADING
@@ -940,7 +940,7 @@ function registerClass(cls, classId) {
 }
 
 // register without logging or hashing
-const modelClassId = "Croquet.Model";
+const modelClassId = "Multisynq.Model";
 Model[CLASS_ID] = modelClassId;
 ModelClasses[modelClassId] = Model;
 

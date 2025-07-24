@@ -366,4 +366,4 @@ export const Stats = {
     }
 };
 
-globalThis.CROQUETSTATS = Stats;
+globalThis.MULTISYNQSTATS = Stats;
