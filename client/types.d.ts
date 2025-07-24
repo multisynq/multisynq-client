@@ -1,4 +1,4 @@
-declare module "@croquet/croquet" {
+declare module "@multisynq/client" {
 
     export type ClassId = string;
 
@@ -55,7 +55,7 @@ declare module "@croquet/croquet" {
     }
 
     /**
-     * Models are synchronized objects in Croquet.
+     * Models are synchronized objects in Multisynq.
      *
      * They are automatically kept in sync for each user in the same [session]{@link Session.join}.
      * Models receive input by [subscribing]{@link Model#subscribe} to events published in a {@link View}.
@@ -72,7 +72,7 @@ declare module "@croquet/croquet" {
      * ```
      * To __initialize__ an instance, override [init()]{@link Model#init}, for example:
      * ```
-     * class FooModel extends Croquet.Model {
+     * class FooModel extends Multisynq.Model {
      *     init(options={}) {
      *         this.answer = options.answer || 42;
      *     }
@@ -115,7 +115,7 @@ declare module "@croquet/croquet" {
         static create<T extends typeof Model>(this: T, options?: any): InstanceType<T>;
 
         /**
-         * __Registers this model subclass with Croquet__
+         * __Registers this model subclass with Multisynq__
          *
          * It is necessary to register all Model subclasses so the serializer can recreate their instances from a snapshot.
          * Also, the [session id]{@link Session.join} is derived by hashing the source code of all registered classes.
@@ -124,7 +124,7 @@ declare module "@croquet/croquet" {
          *
          * Example
          * ```
-         * class MyModel extends Croquet.Model {
+         * class MyModel extends Multisynq.Model {
          *   ...
          * }
          * MyModel.register("MyModel")
@@ -162,7 +162,7 @@ declare module "@croquet/croquet" {
         /**
          * __Static declaration of how to serialize non-model classes.__
          *
-         * The Croquet snapshot mechanism only knows about {@link Model} subclasses.
+         * The Multisynq snapshot mechanism only knows about {@link Model} subclasses.
          * If you want to store instances of non-model classes in your model, override this method.
          *
          * `types()` needs to return an Object that maps _names_ to _class descriptions_:
@@ -181,7 +181,7 @@ declare module "@croquet/croquet" {
          *
          * Example: To use the default serializer just declare the class:</caption>
          * ```
-         * class MyModel extends Croquet.Model {
+         * class MyModel extends Multisynq.Model {
          *   static types() {
          *     return {
          *       "SomeUniqueName": MyNonModelClass,
@@ -194,7 +194,7 @@ declare module "@croquet/croquet" {
          *
          * Example: To define your own serializer, declare read and write functions:
          * ```
-         * class MyModel extends Croquet.Model {
+         * class MyModel extends Multisynq.Model {
          *   static types() {
          *     return {
          *       "THREE.Vector3": {
@@ -275,7 +275,7 @@ declare module "@croquet/croquet" {
         /**
          * **Publish an event to a scope.**
          *
-         * Events are the main form of communication between models and views in Croquet.
+         * Events are the main form of communication between models and views in Multisynq.
          * Both models and views can publish events, and subscribe to each other's events.
          * Model-to-model and view-to-view subscriptions are possible, too.
          *
@@ -337,7 +337,7 @@ declare module "@croquet/croquet" {
          * ```
          * Example:
          * ```
-         * class MyModel extends Croquet.Model {
+         * class MyModel extends Multisynq.Model {
          *   init() {
          *     this.subscribe(this.id, "moved", this.handleMove);
          *   }
@@ -346,7 +346,7 @@ declare module "@croquet/croquet" {
          *     this.y = y;
          *   }
          * }
-         * class MyView extends Croquet.View {
+         * class MyView extends Multisynq.View {
          *   constructor(model) {
          *     this.modelId = model.id;
          *   }
@@ -497,12 +497,12 @@ declare module "@croquet/croquet" {
          *
          * Example:
          * ```
-         *  class FooManager extends Croquet.Model {
+         *  class FooManager extends Multisynq.Model {
          *      init() {
          *          this.beWellKnownAs("UberFoo");
          *      }
          *  }
-         *  class Underlings extends Croquet.Model {
+         *  class Underlings extends Multisynq.Model {
          *      reportToManager(something) {
          *          this.wellKnownModel("UberFoo").report(something);
          *      }
@@ -620,7 +620,7 @@ declare module "@croquet/croquet" {
         viewCount: number;
 
         /** make module exports accessible via any subclass */
-        static Croquet: Croquet;
+        static Multisynq: Multisynq;
     }
 
     export type ViewLocation = {
@@ -685,7 +685,7 @@ declare module "@croquet/croquet" {
         /**
          * **Publish an event to a scope.**
          *
-         * Events are the main form of communication between models and views in Croquet.
+         * Events are the main form of communication between models and views in Multisynq.
          * Both models and views can publish events, and subscribe to each other's events.
          * Model-to-model and view-to-view subscriptions are possible, too.
          *
@@ -855,7 +855,7 @@ declare module "@croquet/croquet" {
          * [Model time]{@View#now} however only advances synchronously on every iteration of the [main loop]{@link Session.join}.
          * Usually `now == externalNow`, but if the model has not caught up yet, then `now < externalNow`.
          *
-         * We call the difference "backlog". If the backlog is too large, Croquet will put an overlay on the scene,
+         * We call the difference "backlog". If the backlog is too large, Multisynq will put an overlay on the scene,
          * and remove it once the model simulation has caught up. The `"synced"` event is sent when that happens.
          *
          * The `externalNow` value is rarely used by apps but may be useful if you need to synchronize views to real-time.
@@ -906,17 +906,17 @@ declare module "@croquet/croquet" {
 
         /** Access the session object.
          *
-         * Note: The view instance may be taken down and reconstructed during the lifetime of a session. the `view` property of the session may differ from `this`, when you store the view instance in our data structure outside of Croquet and access it sometime later.
+         * Note: The view instance may be taken down and reconstructed during the lifetime of a session. the `view` property of the session may differ from `this`, when you store the view instance in our data structure outside of Multisynq and access it sometime later.
          * @public
          */
 
-        get session(): CroquetSession<View>;
+        get session(): MultisynqSession<View>;
 
         /** make module exports accessible via any subclass */
-        static Croquet: Croquet;
+        static Multisynq: Multisynq;
     }
 
-    export type CroquetSession<V extends View> = {
+    export type MultisynqSession<V extends View> = {
         id: string;
         view: V;
         step: (time: number) => void;
@@ -932,10 +932,10 @@ declare module "@croquet/croquet" {
         };
     };
 
-    export type CroquetModelOptions = object;
-    export type CroquetViewOptions = object;
+    export type MultisynqModelOptions = object;
+    export type MultisynqViewOptions = object;
 
-    export type CroquetDebugOption =
+    export type MultisynqDebugOption =
         | "session"
         | "messages"
         | "sends"
@@ -952,15 +952,15 @@ declare module "@croquet/croquet" {
 
     type ClassOf<M> = new (...args: any[]) => M;
 
-    export type CroquetSessionParameters<M extends Model, V extends View, T> = {
+    export type MultisynqSessionParameters<M extends Model, V extends View, T> = {
         apiKey?: string;
         appId: string;
         name?: string | Promise<string>;
         password?: string | Promise<string>;
         model: ClassOf<M>;
         view?: ClassOf<V>;
-        options?: CroquetModelOptions;
-        viewOptions?: CroquetViewOptions;
+        options?: MultisynqModelOptions;
+        viewOptions?: MultisynqViewOptions;
         viewData?: T;
         location?: boolean;
         step?: "auto" | "manual";
@@ -971,13 +971,13 @@ declare module "@croquet/croquet" {
         reflector?: string;
         files?: string;
         box?: string;
-        debug?: CroquetDebugOption | Array<CroquetDebugOption>;
+        debug?: MultisynqDebugOption | Array<MultisynqDebugOption>;
     };
 
     export namespace Session {
         function join<M extends Model, V extends View, T>(
-            parameters: CroquetSessionParameters<M, V, T>,
-        ): Promise<CroquetSession<V>>;
+            parameters: MultisynqSessionParameters<M, V, T>,
+        ): Promise<MultisynqSession<V>>;
     }
 
     export var Constants: Record<string, any>;
@@ -1023,7 +1023,7 @@ declare module "@croquet/croquet" {
             },
         ): void;
         showMessage(msg: string, options?: Record<string, unknown>): void;
-        isCroquetHost(hostname: string): boolean;
+        isMultisynqHost(hostname: string): boolean;
         referrerURL(): string;
         autoSession: (options?: {
             key?: string;
@@ -1070,7 +1070,7 @@ declare module "@croquet/croquet" {
     export var Data: DataHandle;
 
 
-    type Croquet = {
+    type Multisynq = {
         Model: typeof Model;
         View: typeof View;
         Session: typeof Session;

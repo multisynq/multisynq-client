@@ -178,14 +178,10 @@ cleanOutputDirectories([
 
 function generateTypes() {
   // copy the types.d.ts file from client/types.d.ts to dist/multisynq-client.d.ts
-  // and change the names to Multisynq
   const inputFile = path.join('client', 'types.d.ts');
   const outputFile = path.join('dist', 'multisynq-client.d.ts');
   const data = fs.readFileSync(inputFile, 'utf8');
-  const modifiedData = data
-    .replace(/@croquet\/croquet/g, '@multisynq/client')
-    .replace(/Croquet/g, 'Multisynq');
-  fs.writeFileSync(outputFile, modifiedData, 'utf8');
+  fs.writeFileSync(outputFile, data, 'utf8');
 }
 
 async function cleanOutputDirectories(outputDirs) {
