@@ -150,9 +150,6 @@ class ComplexAppRootModel {
 }
 ~~~~
 
-A rather complex but real-world example of this appears in [Microverse]{@link https://github.com/croquet/microverse/blob/644544ed0734fd62939907bb9ddea0746667bc58/src/microverse.js#L542}
-using its [WorldSaver]{https://github.com/croquet/microverse/blob/644544ed0734fd62939907bb9ddea0746667bc58/src/worldSaver.js#L12} class.
-
 # Best Practices
 
 Below are some best practices we learned from our experiences. You can find code examples in various apps provided by Multisynq.

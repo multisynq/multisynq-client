@@ -43,7 +43,7 @@ All application code and data is only processed on the clients. All network comm
 
 ## Open source
 
-Behind the scenes, Multisynq uses the open-source [Croquet](http://github.com/croquet/croquet) library and server. Any documentation and examples you see for Croquet should work exactly the same. Like Croquet, the Multisynq Client is licensed under Apache 2.0.
+The Multisynq Client is licensed under Apache 2.0.
 
 ## Change Log
 
