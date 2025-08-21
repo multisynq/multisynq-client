@@ -190,7 +190,6 @@ class Model {
      * Evaluates func inside of a temporary VM to get bit-identical results, e.g. to init [Constants]{@link Constants}.
      * @param {Function} func - function to evaluate
      * @returns {*} result of func
-     * @since 1.1.0
      * @public
     */
     static evaluate(func) {
@@ -200,7 +199,6 @@ class Model {
     /**
      * **Check if currently executing code is inside a model.**
      * @returns {Boolean} true if currently executing code is inside a model
-     * @since 2.0
      * @public
      */
     static isExecuting() {
@@ -220,7 +218,7 @@ class Model {
      * - the class description can either be just the class itself (if the serializer should
      *   snapshot all its fields, see first example below), or an object with `write()` and `read()` methods to
      *   convert instances from and to their serializable form (see second example below),
-     *   and (since v2.0) `writeStatic()` and `readStatic()` to serialize and restore static properties.
+     *   and `writeStatic()` and `readStatic()` to serialize and restore static properties.
      * - the serialized form answered by `write()` should return a simpler representation,
      *   but it can still contain references to other objects, which will be resolved by the serializer.
      *   E.g. if it answers an Array of objects then the serializer will be called for each of those objects.
@@ -239,7 +237,7 @@ class Model {
      * Serialization types supported:
      * - plain `Object`, `Array`, `number`, `string`, `boolean`, `null`: just like JSON
      * - `-0`, `NaN`, `Infinity`, `-Infinity`
-     * - `BigInt` (since 1.1.0)
+     * - `BigInt`
      * - `undefined`
      * - `ArrayBuffer`, `DataView`, `Int8Array`, `Uint8Array`, `Uint8ClampedArray`, `Int16Array`, `Uint16Array`, `Int32Array`, `Uint32Array`, `Float32Array`, `Float64Array`
      * - `Set`, `Map`
@@ -319,7 +317,6 @@ class Model {
      * }
      * @param {Object} dummyObject - an instance of a class from the library
      * @param {String} prefix - a prefix to add to the class names
-     * @since 2.0
      */
     static gatherClassTypes(dummyObject, prefix) {
         const result = {};
@@ -556,7 +553,6 @@ class Model {
      *     console.log(`${this.now()} Event in model from ${source} ${scope}:${event} with`, data);
      * }
      * @returns {Object} `{scope, event, source}` or `undefined` if not in a subscription handler.
-     * @since 2.0
      * @public
      */
     get activeSubscription() {
@@ -630,7 +626,6 @@ class Model {
      * this.cancelFuture(this.say);
      * @param {Function} method - the method (must be a method of `this`) or "*" to cancel all of this object's future messages
      * @returns {Boolean} true if the message was found and canceled, false if it was not found
-     * @since 1.1.0
      * @public
     */
     cancelFuture(methodOrMessage) {
@@ -823,7 +818,6 @@ class Model {
      * @param {Function|String} func - the function to be wrapped, or a string with the function's source code
      * @returns {Function} a serializable function bound to the given environment
      * @public
-     * @since 2.0
      */
     createQFunc(env, func) {
         if (func === undefined) { func = env; env = {}; }
