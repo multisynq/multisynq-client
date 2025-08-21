@@ -1,0 +1,41 @@
+{
+  "source": {
+    "include": [
+      "docs/QUICKSTART.md",
+      "client/teatime/index.js",
+      "client/teatime/src/model.js",
+      "client/teatime/src/view.js",
+      "client/teatime/src/session.js"
+    ]
+  },
+  "opts": {
+    "destination": "./_site/",
+    "access": ["public"],
+    "tutorials": "docs/tutorials",
+    "encoding": "utf8",
+    "recurse": false,
+    "verbose": true,
+    "mainpagetitle": "Multisynq @CLIENT_VERSION@"
+  },
+  "plugins": ["plugins/markdown"],
+  "markdown": {
+    "parser": "gfm",
+    "hardwrap": false,
+    "idInHeadings": true
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false,
+    "default": {
+      "outputSourceFiles": false,
+      "includeDate": false,
+      "useLongnameInNav": true,
+      "staticFiles": {
+        "include": [
+          "docs/tutorials"
+        ],
+        "includePattern": "\\.(png|jpg|svg|gif)$"
+      }
+    }
+  }
+}

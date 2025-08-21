@@ -61,6 +61,7 @@
     "esbuild": "^0.25.5",
     "esbuild-node-externals": "^1.13.0",
     "esbuild-plugin-replace": "^1.3.0",
-    "find-cache-dir": "^5.0.0"
+    "find-cache-dir": "^5.0.0",
+    "jsdoc": "^4.0.4"
   }
 }
