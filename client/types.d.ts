@@ -238,7 +238,6 @@ declare module "@multisynq/client" {
          * ```
          * @param {Object} dummyObject - an instance of a class from the library
          * @param {String} prefix - a prefix to add to the class names
-         * @since 2.0
          */
         static gatherClassTypes<T extends Object>(dummyObject: T, prefix: string): Record<ClassId, Class<any>>;
 
@@ -401,7 +400,6 @@ declare module "@multisynq/client" {
          * }
          * ```
          * @returns {Object} `{scope, event, source}` or `undefined` if not in a subscription handler.
-         * @since 2.0
          * @public
          */
         get activeSubscription(): EventType | undefined;
@@ -464,7 +462,6 @@ declare module "@multisynq/client" {
          * this.cancelFuture(this.say);
          * @param {Function} method - the method (must be a method of `this`)
          * @returns {Boolean} true if the message was found and canceled, false otherwise
-         * @since 1.1.0-16
          * @public
         */
         cancelFuture<T extends any[]>(method: FutureHandler<T>): boolean;
@@ -581,7 +578,6 @@ declare module "@multisynq/client" {
          * @param func - the function to be wrapped, or a string with the function's source code
          * @returns a serializable function bound to the given environment
          * @public
-         * @since 2.0
          */
         createQFunc<T extends Function>(env: QFuncEnv, func: T|string): T;
         createQFunc<T extends Function>(func: T|string): T;
@@ -809,7 +805,6 @@ declare module "@multisynq/client" {
          * }
          * ```
          * @returns {Object} `{scope, event, source}` or `undefined` if not in a subscription handler.
-         * @since 2.0
          * @public
          */
         get activeSubscription(): EventType | undefined;
